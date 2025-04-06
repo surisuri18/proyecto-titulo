@@ -1,0 +1,9 @@
+//ACA PONDREMOS LOS COMPONENTES QUE REUTILIZAREMOS EN LAS VISTAS DE LA PAGINA
+
+/*
+├── Navbar.jsx
+├── Footer.jsx
+├── ServiceCard.jsx
+├── RatingStars.jsx
+├── CalendarPicker.jsx
+*/
