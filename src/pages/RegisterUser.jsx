@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import logo from "../assets/logo.png";
+import fondo from "../assets/espirales.png";
 
 function RegisterUser() {
   const [formData, setFormData] = useState({
@@ -11,7 +13,24 @@ function RegisterUser() {
   const [correoExiste, setCorreoExiste] = useState(false);
   const [registroExitoso, setRegistroExitoso] = useState(false);
 
-  const correosRegistrados = ["test@correo.com", "usuario@ejemplo.com"]; // Simulación
+  const correosRegistrados = ["test@correo.com", "usuario@ejemplo.com"];
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "./instalar-bp-ac/js/bootstrap.bundle.min.js";
+    script.async = true;
+    document.body.appendChild(script);
+
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "./instalar-bp-ac/css/bootstrap.min.css";
+    document.head.appendChild(link);
+
+    return () => {
+      document.body.removeChild(script);
+      document.head.removeChild(link);
+    };
+  }, []);
 
   const validarFormulario = () => {
     const nuevosErrores = {};
@@ -43,79 +62,97 @@ function RegisterUser() {
       return;
     }
 
-    // Simulación: validación si el correo ya está registrado
     if (correosRegistrados.includes(formData.correo)) {
       setCorreoExiste(true);
       return;
     }
 
-    // Simular "envío" y éxito
     setCorreoExiste(false);
     setRegistroExitoso(true);
 
-    // Aquí puedes enviar la data real a tu backend con fetch o axios
     console.log("Registrando usuario:", formData);
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-lg rounded-xl">
-      <h2 className="text-2xl font-bold mb-4 text-center">Registro de Usuario</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Nombre</label>
-          <input
-            type="text"
-            name="nombre"
-            value={formData.nombre}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-md"
-          />
-          {errores.nombre && <p className="text-red-500 text-sm">{errores.nombre}</p>}
+    <div className="container mt-5">
+      <div className="row justify-content-center align-items-center">
+        <div className="col-md-5 d-none d-md-block">
+          <img src={logo} alt="Registro" className="img-fluid" style={{ maxHeight: "1000px" }} />
         </div>
+        <div className="col-md-7">
+          <div
+            className="text-center text-white py-4 mb-4"
+            style={{
+              backgroundImage: `url(${fondo})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              borderRadius: "10px",
+              fontFamily: "'Roboto', sans-serif",
+            }}
+          >
+            <h1 className="display-6 fw-bold" style={{ color: "#0c1c17" }}>Crear una cuenta nueva</h1>
+          </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Correo electrónico</label>
-          <input
-            type="email"
-            name="correo"
-            value={formData.correo}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-md"
-          />
-          {errores.correo && <p className="text-red-500 text-sm">{errores.correo}</p>}
-          {correoExiste && <p className="text-red-500 text-sm">Este correo ya está registrado.</p>}
+          <div className="p-4">
+            <h4 className="h6 text-center mb-4" style={{ fontFamily: "'Roboto', sans-serif" }}>
+              Crea tu cuenta para contratar servicios
+            </h4>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-3">
+                <label className="form-label">NOMBRE</label>
+                <input
+                  type="text"
+                  name="nombre"
+                  value={formData.nombre}
+                  onChange={handleChange}
+                  className="form-control border border-dark rounded-0"
+                />
+                {errores.nombre && <div className="text-danger small">{errores.nombre}</div>}
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label">CORREO ELECTRÓNICO</label>
+                <input
+                  type="email"
+                  name="correo"
+                  value={formData.correo}
+                  onChange={handleChange}
+                  className="form-control border border-dark rounded-0"
+                />
+                {errores.correo && <div className="text-danger small">{errores.correo}</div>}
+                {correoExiste && <div className="text-danger small">Este correo ya está registrado.</div>}
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label">CLAVE</label>
+                <input
+                  type="password"
+                  name="contraseña"
+                  value={formData.contraseña}
+                  onChange={handleChange}
+                  className="form-control border border-dark rounded-0"
+                />
+                {errores.contraseña && <div className="text-danger small">{errores.contraseña}</div>}
+              </div>
+
+              <button type="submit" className="btn btn-primary w-100">
+                Registrarse
+              </button>
+            </form>
+
+            {registroExitoso && (
+              <div className="alert alert-success mt-3">
+                Registro exitoso. Se ha enviado un correo de confirmación.
+              </div>
+            )}
+
+            <div className="text-center mt-3">
+              <a href="/recuperar-clave" className="text-decoration-none">
+                O registrate con tu cuenta de Google
+              </a>
+            </div>
+          </div>
         </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium">Contraseña</label>
-          <input
-            type="password"
-            name="contraseña"
-            value={formData.contraseña}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-md"
-          />
-          {errores.contraseña && <p className="text-red-500 text-sm">{errores.contraseña}</p>}
-        </div>
-
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-        >
-          Registrarse
-        </button>
-      </form>
-
-      {registroExitoso && (
-        <div className="mt-4 p-3 bg-green-100 text-green-700 rounded">
-          Registro exitoso. Se ha enviado un correo de confirmación.
-        </div>
-      )}
-
-      <div className="mt-4 text-center">
-        <a href="/recuperar-clave" className="text-sm text-blue-500 hover:underline">
-          ¿Olvidaste tu contraseña?
-        </a>
       </div>
     </div>
   );
