@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import logo from "../assets/logo.png";
-import fondo from "../assets/espirales.png";
+import logo from "../assets/logoPROYECTOTITULO.png";
 
 function RegisterUser() {
   const [formData, setFormData] = useState({
@@ -83,7 +82,6 @@ function RegisterUser() {
           <div
             className="text-center text-white py-4 mb-4"
             style={{
-              backgroundImage: `url(${fondo})`,
               backgroundSize: "cover",
               backgroundPosition: "center",
               borderRadius: "10px",

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/NavbarCliente.css';  // Asegúrate de tener el archivo CSS correspondiente
+import logo from '../assets/logoPROYECTOTITULO.png'; // Asegúrate de que la ruta sea correcta
 
 function NavbarCliente() {
   return (
@@ -8,7 +9,7 @@ function NavbarCliente() {
       <div className="container-fluid d-flex justify-content-between align-items-center">
         {/* Logo a la izquierda */}
         <Link className="navbar-brand" to="/">
-          <img src="/logo.png" alt="Logo" height="40" />
+          <img src={logo} alt="Logo00" height="40" />
         </Link>
 
         {/* Botones centrados */}

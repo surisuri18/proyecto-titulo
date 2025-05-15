@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/Navbar.css';
+import logo from '../assets/logoPROYECTOTITULO.png'; // Asegúrate de que la ruta sea correcta
 
 function Navbar() {
   return (
@@ -8,8 +9,8 @@ function Navbar() {
       <div className="container d-flex justify-content-center">
         <Link className="navbar-brand m-0" to="/">
           <img
-            src="/logo.png"
-            alt="Logo"
+            src={logo}
+            alt="Logoooooo"
             className="logo-navbar"
           />
         </Link>
