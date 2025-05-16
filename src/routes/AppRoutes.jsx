@@ -1,6 +1,6 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import RegisterUser from '../pages/RegisterUser';
+import RegisterUser from '../pages/Cliente/RegisterUser';
 
 const AppRoutes = () => {
   return (

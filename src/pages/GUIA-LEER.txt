@@ -1,13 +1,18 @@
 //ESTAS SON LAS VISTAS QUE TENDRÁ LA PAGINA WEB, 
 // ADEMAS HAY OTRS CARPETA DONDE PONDREMOS LOS COMPONENTES
 /*
-├── RegisterUser.jsx
-├── RegisterProvider.jsx
-├── Login.jsx
-├── UserProfile.jsx
-├── ProviderProfile.jsx
-├── AdminDashboard.jsx
+├── RegisterUser.jsx ✅ 
+├── RegisterProvider.jsx ✅ 
+├── Login.jsx ✅ 
+├── UserProfile.jsx ✅ 
+├── ProviderProfile.jsx ✅ 
+├── AdminDashboard.jsx 
 ├── Chat.jsx
-├── SearchServices.jsx
-├── LostPets.jsx
+├── SearchServices.jsx ✅ 
+├── Home.jsx ✅ 
 */
+FALTA:
+
+UserEditPofile.jsx
+ProviderEditProfile.jsx
+
