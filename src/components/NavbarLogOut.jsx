@@ -19,7 +19,7 @@ function NavbarLogOut() {
 
           <Link to="/feature1" className="nav-btn">OFRECE TUS SERVICIOS</Link>
           <Link to="/feature2" className="nav-btn">INICIAR SESIÓN</Link>
-          <Link to="/feature3" className="nav-btn">REGÍSTRATE</Link>
+          <Link to="/registeruser" className="nav-btn">REGÍSTRATE</Link>
         </div>
       </div>
     </nav>
