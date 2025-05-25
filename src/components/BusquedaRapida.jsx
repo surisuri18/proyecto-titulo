@@ -2,20 +2,18 @@ import React from 'react';
 import '../styles/BusquedaRapida.css';
 
 function BusquedaRapida() {
+  const oficios = [
+    'FOTÓGRAFO', 'GÁSFITER', 'CERÁMICA', 'DEPILACIÓN',
+    'SOLDADOR', 'OBRERO', 'ASEO DEL HOGAR', 'MANICURA',
+  ];
+
   return (
-    <div className="busqueda-rapida-oval">
-      <div className="links-container">
-        <a href="/oficio1" className="link">Oficio 1</a>
-        <a href="/oficio2" className="link">Oficio 2</a>
-        <a href="/oficio3" className="link">Oficio 3</a>
-        <a href="/oficio4" className="link">Oficio 4</a>
-      </div>
-      <div className="links-container">
-        <a href="/oficio5" className="link">Oficio 5</a>
-        <a href="/oficio6" className="link">Oficio 6</a>
-        <a href="/oficio7" className="link">Oficio 7</a>
-        <a href="/oficio8" className="link">Oficio 8</a>
-      </div>
+    <div className="busqueda-container">
+      {oficios.map((oficio, index) => (
+        <div key={index} className="busqueda-item">
+          {oficio}
+        </div>
+      ))}
     </div>
   );
 }

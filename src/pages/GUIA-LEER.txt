@@ -13,6 +13,20 @@
 */
 FALTA:
 
-UserEditPofile.jsx
-ProviderEditProfile.jsx
+UserEditPofile
+ProviderEditProfile
 
+AdminDashboard
+
+ProviderProfile
+RegisterUser
+SearchServices
+UserEditPofile
+UserProfile
+
+ProviderEditProfile
+RegisterProvider
+ProviderInbox
+
+Home
+LoginRegister

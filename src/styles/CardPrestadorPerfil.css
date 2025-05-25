@@ -33,3 +33,25 @@
   border-radius: 6px;
   margin: 4px 0;
 }
+
+.card-icono {
+  font-size: 18px;
+  color: #333;
+  margin: 8px 0;
+}
+
+.card-barra {
+  height: 10px;
+  width: 100%;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.card-etiqueta {
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 6px;
+  color: #000;
+}
+

@@ -1,22 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/NavbarLogOut.css';
-import logo from '../assets/logo.png'
+
+import logo from '../assets/Logo2.png';
 
 function NavbarLogOut() {
   return (
     <nav className="navbar navbar-expand-lg custom-navbar">
       <div className="container-fluid d-flex justify-content-between align-items-center">
-        {/* Logo a la izquierda */}
-        <Link className="navbar-brand" to="/">
-          <img src={logo} alt="Logo" height="40" />
+
+        {/* Logo */}
+        <Link className="navbar-brand d-flex align-items-center" to="/">
+          <img src={logo} alt="TuExpertoCerca" className="logo-navbar" />
         </Link>
 
-        {/* Botones centrados */}
+        {/* Botones */}
         <div className="mx-auto d-flex gap-3">
-          <Link to="/feature1" className="nav-btn">¡Ofrece tus servicios!</Link>
-          <Link to="/feature2" className="nav-btn">Iniciar Sesión</Link>
-          <Link to="/registeruser" className="nav-btn">Registrarme</Link>
+
+          <Link to="/feature1" className="nav-btn">OFRECE TUS SERVICIOS</Link>
+          <Link to="/feature2" className="nav-btn">INICIAR SESIÓN</Link>
+          <Link to="/feature3" className="nav-btn">REGÍSTRATE</Link>
         </div>
       </div>
     </nav>
@@ -24,4 +27,3 @@ function NavbarLogOut() {
 }
 
 export default NavbarLogOut;
-

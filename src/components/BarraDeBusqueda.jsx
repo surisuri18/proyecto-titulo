@@ -1,18 +1,18 @@
 import React from 'react';
-import '../styles/BarraDeBusqueda.css';
-import { BsSearch } from 'react-icons/bs'; // Icono de lupa
+import { FaSearch } from 'react-icons/fa'; // Asegúrate de tener react-icons instalado
+import '../styles/BarraDeBusqueda.css'; // Estilos externos si deseas más control
 
 function BarraDeBusqueda() {
   return (
-    <div className="barra-busqueda-contenedor">
+    <div className="search-container">
       <input
         type="text"
-        placeholder="Buscar..."
-        className="barra-busqueda-input"
+        className="search-input"
+        placeholder="Buscar oficios..."
       />
-      <button className="barra-busqueda-boton">
-        <BsSearch size={20} />
-      </button>
+      <div className="search-icon">
+        <FaSearch />
+      </div>
     </div>
   );
 }

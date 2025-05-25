@@ -1,13 +1,14 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import RegisterUser from '../pages/Cliente/RegisterUser';
+import Home from '../pages/Home'; 
 
-const AppRoutes = () => {
+function AppRoutes() {
   return (
     <Routes>
-      <Route path="/register" element={<RegisterUser />} />
+      <Route path="/" element={<Home />} />
     </Routes>
   );
-};
+}
 
 export default AppRoutes;
+
