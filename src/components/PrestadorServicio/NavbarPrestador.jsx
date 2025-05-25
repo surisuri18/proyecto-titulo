@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../../assets/logoPROYECTOTITULO.png'; // Asegúrate de que la ruta sea correcta
+import logo from '../../assets/logo.png'; // Asegúrate de que la ruta sea correcta
 import '../../styles/NavbarPrestador.css'; // Asegúrate de que la ruta sea correcta
 
 function NavbarPrestador() {

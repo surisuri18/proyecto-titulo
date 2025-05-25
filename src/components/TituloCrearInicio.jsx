@@ -1,11 +1,27 @@
 import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import espirales from '../assets/espirales.png';
 import '../styles/TituloCrearInicio.css';
-//haciendo un comentario para probar si se me sube el commit
-function TituloCrearInicio({ texto }) {
+//TituloCrearInicio.css
+
+function TituloCrearInicio({ texto, height = '140px', fontSize = '3.5rem' }) {
   return (
-    
-    <div className="titulo-crear-inicio-container">
-      <h1 className="titulo-crear-inicio">{texto}</h1>
+    <div
+      className="d-flex justify-content-center align-items-center text-center titulo-crear-inicio-container"
+      style={{
+        backgroundImage: `url(${espirales})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        height: height,
+        width: '100%',
+      }}
+    >
+      <h1
+        className="m-0 fw-bold titulo-crear-inicio"
+        style={{ fontSize }}
+      >
+        {texto}
+      </h1>
     </div>
   );
 }

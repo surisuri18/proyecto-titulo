@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/Navbar.css';
-import logo from '../assets/logoPROYECTOTITULO.png'; // Asegúrate de que la ruta sea correcta
+import logo from '../assets/logo.png'; // Asegúrate de que la ruta sea correcta
 
 function Navbar() {
   return (
