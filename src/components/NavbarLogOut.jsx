@@ -17,8 +17,8 @@ function NavbarLogOut() {
         {/* Botones */}
         <div className="mx-auto d-flex gap-3">
 
-          <Link to="/feature1" className="nav-btn">OFRECE TUS SERVICIOS</Link>
-          <Link to="/feature2" className="nav-btn">INICIAR SESIÓN</Link>
+          <Link to="/registerprovider" className="nav-btn">OFRECE TUS SERVICIOS</Link>
+          <Link to="/login" className="nav-btn">INICIAR SESIÓN</Link>
           <Link to="/registeruser" className="nav-btn">REGÍSTRATE</Link>
         </div>
       </div>

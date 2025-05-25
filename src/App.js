@@ -3,6 +3,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import NavbarLogOut from './components/NavbarLogOut';
 import Footer from './components/FooterReact';
 import RegisterUser from './pages/Cliente/RegisterUser';
+import RegisterProvider from './pages/Prestador/RegisterProvider'
+import LoginPage from './pages/Login';
+import Home from './pages/Home'
 
 function App() {
   const [desc, setDesc] = useState('');
@@ -22,7 +25,11 @@ function App() {
     <BrowserRouter>
       <NavbarLogOut />
       <Routes>
+         {/* Ruta por defecto */}
+        <Route path="/" element={<Home />} />
         <Route path="/registeruser" element={<RegisterUser />} />
+        <Route path="/registerprovider" element={<RegisterProvider />} />
+        <Route path="/login" element={<LoginPage />} />
         {/* Aquí puedes agregar más rutas en el futuro */}
       </Routes>
       <Footer />

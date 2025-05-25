@@ -1,0 +1,4 @@
+/* Asegura que el modal y backdrop se vean correctamente */
+.modal {
+  overflow: hidden;
+}
