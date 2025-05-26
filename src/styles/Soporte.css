@@ -1,0 +1,42 @@
+.soporte-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+
+.soporte-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.soporte-form label {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.soporte-form input,
+.soporte-form textarea {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.soporte-form button {
+  align-self: flex-end;
+  background-color: #f561c5;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 24px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.soporte-form button:hover {
+  background-color: #e14cae;
+}

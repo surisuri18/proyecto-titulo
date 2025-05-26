@@ -1,0 +1,131 @@
+.perfil-top {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+/* Columna izquierda */
+.perfil-columna {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.perfil-foto img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.perfil-ubicacion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.ubicacion-icono {
+  color: #f561c5;
+  margin-bottom: 4px;
+  font-size: 16px;
+}
+
+.ubicacion-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 160px;
+}
+
+.ubicacion-inputs select {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: white;
+  color: #333;
+}
+
+/* Botón guardar */
+.btn-chat {
+  margin-top: 10px;
+  padding: 8px 24px;
+  background-color: #f561c5;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-chat:hover {
+  background-color: #e14cae;
+}
+
+/* Centro editable */
+.perfil-lado-derecho {
+  width: 500px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.input-nombre {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+.input-oficio {
+  font-size: 16px;
+  font-weight: 500;
+  color: #444;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.input-descripcion {
+  padding: 10px 12px;
+  font-size: 14px;
+  line-height: 1.5;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  resize: vertical;
+}
+
+/* Galería */
+.perfil-galeria {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  width: 240px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .perfil-top {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .perfil-lado-derecho,
+  .perfil-galeria {
+    width: 100%;
+  }
+
+  .perfil-galeria {
+    grid-template-columns: 1fr;
+  }
+}
