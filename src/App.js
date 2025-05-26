@@ -2,13 +2,17 @@ import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import NavbarLogOut from './components/NavbarLogOut';
 import Footer from './components/FooterReact';
+import BotonAyuda from './components/BotonAyuda';
+
+import Home from './pages/Home';
 import RegisterUser from './pages/Cliente/RegisterUser';
+import RegisterProvider from './pages/Prestador/RegisterProvider';
+import LoginPage from './pages/Login';
 import SearchServices from './pages/Cliente/SearchServices';
 import ProviderProfile from './pages/Cliente/ProviderProfile';
 import ProviderEditProfile from './pages/Prestador/ProviderEditProfile';
 import ProviderInbox from './pages/Prestador/ProviderInbox';
 import Soporte from './pages/Soporte';
-import BotonAyuda from './components/BotonAyuda';
 
 function App() {
   const [desc, setDesc] = useState('');
@@ -29,26 +33,22 @@ function App() {
       <NavbarLogOut />
       <main>
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route path="/registeruser" element={<RegisterUser />} />
-          {/* Aquí puedes agregar más rutas en el futuro */}
+          <Route path="/registerprovider" element={<RegisterProvider />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/search" element={<SearchServices />} />
-
           <Route path="/provider" element={<ProviderProfile />} />
-
           <Route path="/provider/edit" element={<ProviderEditProfile />} />
-
           <Route path="/inbox" element={<ProviderInbox />} />
-
           <Route path="/soporte" element={<Soporte />} />
-
-          
-
         </Routes>
       </main>
       <BotonAyuda />
       <Footer />
     </BrowserRouter>
-  )
+  );
 }
 
 export default App;
+
