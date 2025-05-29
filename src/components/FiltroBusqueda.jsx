@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import '../styles/FiltroBusqueda.css'; 
+import '../styles/Components/FiltroBusqueda.css';
 
 const FilterButton = ({ onFilter }) => {
   const [open, setOpen] = useState(false);
@@ -23,7 +23,7 @@ const FilterButton = ({ onFilter }) => {
   return (
     <div className="filtro-container" ref={ref}>
       <button
-        className="filtro-btn"
+        className={`filtro-btn ${open ? 'open' : ''}`}
         type="button"
         onClick={() => setOpen(prev => !prev)}
       >

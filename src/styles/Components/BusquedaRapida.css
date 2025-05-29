@@ -1,0 +1,65 @@
+.busqueda-wrapper {
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  padding: 1.25rem 1rem; /* antes: 2rem 1.5rem */
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+  max-width: 900px; /* antes 1000px */
+  margin: 0 auto 2rem auto;
+  transition: all 0.3s ease;
+}
+
+.busqueda-wrapper:hover {
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.07);
+}
+
+.busqueda-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Fuerza 4 columnas */
+  gap: 12px;
+  justify-items: center;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .busqueda-container {
+    grid-template-columns: repeat(2, 1fr); /* En tablets o móvil: 2 por fila */
+  }
+}
+
+@media (max-width: 480px) {
+  .busqueda-container {
+    grid-template-columns: 1fr; /* En celular: 1 por fila */
+  }
+}
+
+
+.busqueda-item {
+  background-color: white;
+  color: #333;
+  font-weight: 500;
+  padding: 8px 18px; /* más pequeño */
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid #ddd;
+  text-align: center;
+  white-space: nowrap;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+.busqueda-item:hover {
+  background-color: #d96ce2;
+  color: white;
+  border-color: #d96ce2;
+  box-shadow: 0 2px 10px rgba(217, 108, 226, 0.3);
+}
+
+.busqueda-titulo {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 1.8rem; /* ← aquí aumentamos el espacio */
+}
+

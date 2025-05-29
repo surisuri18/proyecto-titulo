@@ -1,0 +1,22 @@
+.boton-ayuda {
+  background-color: #d96ce2;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 20px;
+  font-weight: 600;
+  cursor: grab;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: background-color 0.2s ease;
+  user-select: none;
+  touch-action: none; /* evita problemas de scroll accidental */
+}
+
+.boton-ayuda:hover {
+  background-color: #bd4fca;
+}
+
+.boton-ayuda:active {
+  cursor: grabbing;
+}

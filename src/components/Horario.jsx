@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/Horario.css';
+import '../styles/Components/Horario.css';
 
 const dias = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 

@@ -1,0 +1,80 @@
+.reportes-usuarios-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.lista-reportes-usuarios {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.reporte-usuario-card {
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 1.5rem;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  text-align: left;
+  transition: background-color 0.3s;
+}
+
+.reporte-usuario-card.visto {
+  background-color: #f3f3f3;
+  opacity: 0.85;
+}
+
+.reporte-usuario-card h4 {
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.info-usuario {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  gap: 2rem;
+}
+
+.info-usuario div {
+  flex: 1;
+  background-color: #fafafa;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.descripcion-bloque {
+  background-color: #f8f8f8;
+  border-left: 4px solid #d96ce2;
+  padding: 12px;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+
+.estado {
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.reporte-usuario-card button {
+  margin-top: 1rem;
+  background-color: #d96ce2;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.reporte-usuario-card button:hover {
+  background-color: #be4dc9;
+}
+
+@media (max-width: 768px) {
+  .info-usuario {
+    flex-direction: column;
+  }
+}

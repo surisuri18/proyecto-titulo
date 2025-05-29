@@ -1,0 +1,19 @@
+/* RegistroUsuario.css */
+.logo-responsive {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+/* Tamaño específico según el tamaño de pantalla */
+@media (max-width: 576px) {
+  .logo-responsive {
+    max-width: 350px;
+  }
+}
+
+@media (min-width: 577px) {
+  .logo-responsive {
+    max-width: 500px;
+  }
+}

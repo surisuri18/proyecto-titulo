@@ -1,0 +1,62 @@
+.filtro-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Botón de filtro estilizado */
+.filtro-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  background-color: white;
+  color: #333;
+  font-weight: 500;
+  border: 2px solid #d96ce2;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.filtro-btn:hover {
+  background-color: #d96ce2;
+  color: white;
+  box-shadow: 0 4px 10px rgba(217, 108, 226, 0.3);
+}
+
+.icono-lista {
+  transition: transform 0.3s ease;
+}
+
+/* Rota el ícono cuando el menú está abierto (opcional) */
+.filtro-btn.open .icono-lista {
+  transform: rotate(180deg);
+}
+
+/* Dropdown con estilo de tarjeta flotante */
+.filtro-dropdown {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  padding: 8px 0;
+  list-style: none;
+  z-index: 10;
+  min-width: 180px;
+}
+
+.filtro-dropdown li {
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.filtro-dropdown li:hover {
+  background-color: #fce9fb; /* suave rosado */
+  color: #d96ce2;
+}

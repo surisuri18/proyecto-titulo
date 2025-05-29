@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/BusquedaRapida.css';
+import '../styles/Components/BusquedaRapida.css';
 
 function BusquedaRapida() {
   const oficios = [
@@ -8,12 +8,16 @@ function BusquedaRapida() {
   ];
 
   return (
-    <div className="busqueda-container">
-      {oficios.map((oficio, index) => (
-        <div key={index} className="busqueda-item">
-          {oficio}
-        </div>
-      ))}
+    <div className="busqueda-wrapper">
+      <h3 className="busqueda-titulo">Búsqueda Rápida</h3>
+
+      <div className="busqueda-container">
+        {oficios.map((oficio, index) => (
+          <div key={index} className="busqueda-item">
+            {oficio}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
