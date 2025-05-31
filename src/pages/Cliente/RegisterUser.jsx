@@ -42,13 +42,12 @@ const fieldsUsuario = [
 
 export default function RegistroUsuario({ onSubmit }) {
   const [showModal, setShowModal] = React.useState(false);
-  const [email,     setEmail]     = React.useState('');
+  const [email, setEmail] = React.useState('');
   const [error, setError] = React.useState(null);
 
-    const handleSubmit = async (data) => {
-    setError(null);
+  const handleSubmit = async (data) => {
+    setError(null); // limpia errores previos
     try {
-      // Envía datos al backend (ojo, "clave" debe coincidir con el campo backend)
       await registerUser({
         nombre: data.nombre,
         correo: data.correo,
@@ -57,6 +56,7 @@ export default function RegistroUsuario({ onSubmit }) {
       setEmail(data.correo);
       setShowModal(true);
     } catch (err) {
+      // Aquí muestras el error que venga del backend
       setError(err.error || 'Error inesperado');
     }
   };
@@ -70,6 +70,13 @@ export default function RegistroUsuario({ onSubmit }) {
             height="140px"
             fontSize="2.5rem"
           />
+
+          {/* Muestra el error si existe */}
+          {error && (
+            <div className="alert alert-danger text-center">
+              {error}
+            </div>
+          )}
 
           <FormBase
             fields={fieldsUsuario}
