@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaMapMarkerAlt } from 'react-icons/fa';
-import '../styles/CardServicio.css';
+import '../styles/Components/CardServicio.css';
 import Valoracion from './PrestadorServicio/Valoracion';
 
 function CardServicio() {

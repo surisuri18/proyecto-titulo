@@ -1,18 +1,37 @@
-import React from 'react';
-import { FaSearch } from 'react-icons/fa'; // Asegúrate de tener react-icons instalado
-import '../styles/BarraDeBusqueda.css'; // Estilos externos si deseas más control
+import React, { useState } from 'react';
+import { FaSearch } from 'react-icons/fa';
+import '../styles/Components/BarraDeBusqueda.css';
 
-function BarraDeBusqueda() {
+function BarraDeBusqueda({ onSearch }) {
+  const [query, setQuery] = useState('');
+
+  const handleSearch = () => {
+    if (onSearch) {
+      onSearch(query);
+    } else {
+      console.log('Buscando:', query); // Solo por ahora
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
     <div className="search-container">
       <input
         type="text"
         className="search-input"
         placeholder="Buscar oficios..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onKeyDown={handleKeyDown}
       />
-      <div className="search-icon">
+      <button className="search-icon" onClick={handleSearch}>
         <FaSearch />
-      </div>
+      </button>
     </div>
   );
 }

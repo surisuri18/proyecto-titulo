@@ -1,0 +1,70 @@
+.menu-admin {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.menu-admin h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: #222;
+}
+
+.subtitulo {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  text-decoration: underline;
+  color: #444;
+}
+
+/* Tarjetas en una fila con wrap si es necesario */
+.tarjeta-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+/* Tarjeta individual */
+.tarjeta {
+  background-color: white;
+  border: 2px solid black;
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  text-align: center;
+  max-width: 240px;
+  flex: 1 1 240px;
+}
+
+.tarjeta:hover {
+  transform: scale(1.05);
+  border-color: #d96ce2;
+  box-shadow: 0 8px 20px rgba(217, 108, 226, 0.2);
+}
+
+.tarjeta img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-bottom: 1rem;
+}
+
+.tarjeta p {
+  font-weight: bold;
+  color: #222;
+  font-size: 1rem;
+}
+
+.menu-admin {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh; /* ocupa gran parte de la pantalla */
+  padding: 2rem;
+  text-align: center;
+}

@@ -1,0 +1,15 @@
+
+.marca-agua {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 50vw;             /* Ocupa el 50% del ancho de la pantalla */
+  height: 100vh;           /* Toda la altura de la pantalla */
+  background-repeat: no-repeat;
+  background-position: left center;  /* Alineada a la izquierda y centrada verticalmente */
+  background-size: contain;
+  opacity: 1;              /* Sin opacidad */
+  z-index: -10;
+  pointer-events: none;
+}
+

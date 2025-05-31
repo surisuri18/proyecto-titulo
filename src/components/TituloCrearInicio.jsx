@@ -1,7 +1,7 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import espirales from '../assets/espirales.png';
-import '../styles/TituloCrearInicio.css';
+import '../styles/Components/TituloCrearInicio.css';
 //TituloCrearInicio.css
 
 function TituloCrearInicio({ texto, height = '140px', fontSize = '3.5rem' }) {

@@ -1,25 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../styles/NavbarLogOut.css';
-
+import '../styles/Components/NavbarLogOut.css';
 import logo from '../assets/Logo2.png';
+import ImageDropdown from './ImageDropdown'; // 👈 importa tu dropdown
+
+const usuarioActual = null;
 
 function NavbarLogOut() {
   return (
-    <nav className="navbar navbar-expand-lg custom-navbar">
-      <div className="container-fluid d-flex justify-content-between align-items-center">
+    <nav className="navbar navbar-expand-lg custom-navbar px-3">
+      <div className="container-fluid position-relative d-flex justify-content-between align-items-center">
 
-        {/* Logo */}
-        <Link className="navbar-brand d-flex align-items-center" to="/">
-          <img src={logo} alt="TuExpertoCerca" className="logo-navbar" />
+        {/* Logo centrado */}
+        <Link to="/" className="navbar-brand logo-centered">
+          <img src={logo} alt="Logo" className="logo-navbar" />
         </Link>
 
-        {/* Botones */}
-        <div className="mx-auto d-flex gap-3">
-
-          <Link to="/registerprovider" className="nav-btn">OFRECE TUS SERVICIOS</Link>
-          <Link to="/login" className="nav-btn">INICIAR SESIÓN</Link>
-          <Link to="/registeruser" className="nav-btn">REGÍSTRATE</Link>
+        {/* Dropdown a la derecha */}
+        <div className="ms-auto">
+          <ImageDropdown />
         </div>
       </div>
     </nav>

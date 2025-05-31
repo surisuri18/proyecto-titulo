@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import '../styles/ImagenGaleria.css';
+import '../styles/Components/ImagenGaleria.css';
 
 function ImagenGaleria() {
   const [imagen, setImagen] = useState(null);

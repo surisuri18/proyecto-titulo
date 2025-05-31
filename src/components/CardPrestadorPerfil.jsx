@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/CardPrestadorPerfil.css';
+import '../styles/Components/CardPrestadorPerfil.css';
 import imagenPerfil from '../assets/imagenPerfil.jpeg';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 

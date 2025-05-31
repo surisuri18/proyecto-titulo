@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaCheckCircle } from 'react-icons/fa'; // npm install react-icons
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../styles/PopupExitoso.css';
+import '../../styles/Components/PopupExitoso.css';
 
 const PopupExitoso = ({ show, correo, onClose }) => {
   if (!show) return null;

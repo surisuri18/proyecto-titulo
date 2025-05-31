@@ -1,0 +1,38 @@
+.home-background {
+  position: relative;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .home-background::before {
+    display: none;
+  }
+}
+
+/* NUEVO BLOQUE: Estilos para juntar búsqueda y filtro */
+.search-filter-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 16px; /* Espacio entre barra y botón */
+  margin: 2rem 0;
+}
+
+.carrusel-limitado {
+  max-width: 800px;
+  margin: 0 auto;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.1); /* Sombra suave difuminada */
+  transition: box-shadow 0.3s ease;
+}
+
+.carrusel-limitado img {
+  max-height: 400px;
+  object-fit: cover;
+}
+
+.carrusel-limitado:hover {
+  box-shadow: 0 0 35px rgba(0, 0, 0, 0.15); /* Un poco más intensa al pasar el mouse */
+}

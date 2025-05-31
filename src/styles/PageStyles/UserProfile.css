@@ -1,0 +1,30 @@
+.perfil-usuario {
+  max-width: 500px;
+  margin: 4rem auto;
+}
+
+.perfil-card {
+  border-radius: 20px;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f0f4f8, #ffffff);
+  border: none;
+}
+
+.foto-perfil {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border: 4px solid #0d6efd; /* azul bootstrap */
+}
+
+.perfil-card .btn-outline-danger {
+  padding: 0.6rem 1.2rem;
+  border-radius: 12px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.perfil-card .btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: white;
+}

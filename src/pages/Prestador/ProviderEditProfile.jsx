@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../../styles/ProviderEditProfile.css';
+import '../../styles/PageStyles/ProviderEditProfile.css';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import Valoracion from '../../components/PrestadorServicio/Valoracion';
 import ImagenGaleria from '../../components/ImagenGaleria';
