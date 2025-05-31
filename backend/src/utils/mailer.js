@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendConfirmationEmail = (email, token) => {
-  const url = `http://localhost:3000/confirm/${token}`;  // Cambia por tu URL frontend donde reciba el token
+  const url = `http://localhost:3000/confirmar-cuenta/${token}`;  // Cambia por tu URL frontend donde reciba el token
 
   const mailOptions = {
     from: process.env.EMAIL_USER,

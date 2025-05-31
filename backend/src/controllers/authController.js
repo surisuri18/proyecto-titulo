@@ -1,9 +1,9 @@
-const jwt = require('jsonwebtoken'); 
-const { sendConfirmationEmail } = require('../utils/mailer');
-const User = require('../models/user');
-const bcrypt = require('bcrypt');
+import jwt from 'jsonwebtoken';
+import { sendConfirmationEmail } from '../utils/mailer.js';
+import User from '../models/user.js';
+import bcrypt from 'bcrypt';
 
-exports.register = async (req, res) => {
+export const register = async (req, res) => {
   const { nombre, correo, clave, servicios } = req.body;
 
   try {
@@ -28,7 +28,7 @@ exports.register = async (req, res) => {
   }
 };
 
-exports.confirmEmail = async (req, res) => {
+export const confirmEmail = async (req, res) => {
   const { token } = req.params;
 
   try {
@@ -50,5 +50,28 @@ exports.confirmEmail = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(400).json({ error: 'Token inválido o expirado' });
+  }
+};
+
+export const login = async (req, res) => {
+  const { correo, clave } = req.body;
+
+  try {
+    const user = await User.findOne({ correo });
+    if (!user) return res.status(400).json({ error: 'Credenciales inválidas' });
+
+    const match = await bcrypt.compare(clave, user.clave);
+    if (!match) return res.status(400).json({ error: 'Credenciales inválidas' });
+
+    // Opcional: crea un token JWT para sesiones
+    const token = jwt.sign(
+      { id: user._id, correo: user.correo },
+      process.env.JWT_SECRET,
+      { expiresIn: '12h' }
+    );
+
+    res.json({ message: 'Login exitoso', token, user: { nombre: user.nombre, correo: user.correo, servicios: user.servicios } });
+  } catch (error) {
+    res.status(500).json({ error: 'Error en el servidor' });
   }
 };

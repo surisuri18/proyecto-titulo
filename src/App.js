@@ -6,7 +6,6 @@ import BotonAyuda from './components/BotonAyuda';
 import Home from './pages/All/Home';
 import RegisterUser from './pages/Cliente/RegisterUser';
 import RegisterProvider from './pages/Prestador/RegisterProvider';
-import LoginPage from './pages/All/Login';
 import SearchServices from './pages/Cliente/SearchServices';
 import ProviderProfile from './pages/Prestador/ProviderProfile';
 import ProviderEditProfile from './pages/Prestador/ProviderEditProfile';
@@ -22,6 +21,10 @@ import ReportesUsuarios from './pages/Admin/ReportesUsuarios';
 import MarcaDeAgua from './components/MarcaDeAgua';
 import UserProfile from './pages/Cliente/UserProfile';
 import UserEditProfile from './pages/Cliente/UserEditProfile';
+import ConfirmarCuenta from './pages/All/ConfirmarCuenta';
+import { AuthProvider } from './context/AuthContext';
+import LoginPageWrapper from './pages/All/LoginPageWrapper'
+//import LoginPage from './pages/All/Login';
 
 function App() {
   const [desc, setDesc] = useState('');
@@ -38,6 +41,7 @@ function App() {
   ];
 
   return (
+    <AuthProvider>
     <BrowserRouter>
       <NavbarLogOut />
       <MarcaDeAgua></MarcaDeAgua>
@@ -46,7 +50,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/registeruser" element={<RegisterUser />} />
           <Route path="/registerprovider" element={<RegisterProvider />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPageWrapper  />} />
           <Route path="/search" element={<SearchServices />} />
           <Route path="/provider" element={<ProviderProfile />} />
           <Route path="/provider/edit" element={<ProviderEditProfile />} />
@@ -61,12 +65,14 @@ function App() {
           <Route path="/user/inbox" element={<UserInbox />} />
           <Route path="/user/profile" element={<UserProfile />} />
           <Route path="/user/edit" element={<UserEditProfile />} />
+          <Route path="/confirmar-cuenta/:token" element={<ConfirmarCuenta />} />
 
         </Routes>
       </main>
       <BotonAyuda />
       <Footer />
     </BrowserRouter>
+    </AuthProvider>
   );
 }
 

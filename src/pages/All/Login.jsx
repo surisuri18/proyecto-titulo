@@ -19,6 +19,7 @@ const LoginPage = ({ onLogin }) => {
       return;
     }
     setError('');
+     console.log('Formulario enviado:', { correo, clave });
     onLogin?.({ correo, clave });
   };
 

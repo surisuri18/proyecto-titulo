@@ -12,3 +12,12 @@ export const registerUser = async (userData) => {
     throw error.response?.data || { error: 'Error en la solicitud' };
   }
 };
+
+export const loginUser = async (userData) => {
+  try {
+    const response = await axios.post(`${API_URL}/login`, userData);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: 'Error en la solicitud' };
+  }
+};
