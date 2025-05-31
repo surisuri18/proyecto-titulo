@@ -6,6 +6,8 @@ import RegistroExitosoModal from '../../components/Popups/PopupRegistroExitoso';
 import logo from '../../assets/logo.png';         // Asegúrate de apuntar a la ruta correcta
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+import { registerUser } from '../../services/authService'; 
+
 const fieldsUsuario = [
   {
     name: 'nombre',
@@ -44,11 +46,22 @@ const fieldsUsuario = [
 export default function RegistroUsuario({ onSubmit }) {
   const [showModal, setShowModal] = React.useState(false);
   const [email,     setEmail]     = React.useState('');
+  const [error, setError] = React.useState(null);
 
-  const handleSubmit = data => {
-    setEmail(data.correo);
-    onSubmit?.(data);
-    setShowModal(true);
+    const handleSubmit = async (data) => {
+    setError(null);
+    try {
+      // Envía datos al backend (ojo, "clave" debe coincidir con el campo backend)
+      await registerUser({
+        nombre: data.nombre,
+        correo: data.correo,
+        clave: data.clave,
+      });
+      setEmail(data.correo);
+      setShowModal(true);
+    } catch (err) {
+      setError(err.error || 'Error inesperado');
+    }
   };
 
   return (
