@@ -22,7 +22,7 @@ import ReportesUsuarios from './pages/Admin/ReportesUsuarios';
 import MarcaDeAgua from './components/MarcaDeAgua';
 import UserProfile from './pages/Cliente/UserProfile';
 import UserEditProfile from './pages/Cliente/UserEditProfile';
-
+import BandejaEntrada from './pages/All/BandejaEntrada'
 function App() {
   const [desc, setDesc] = useState('');
 
@@ -61,6 +61,7 @@ function App() {
           <Route path="/user/inbox" element={<UserInbox />} />
           <Route path="/user/profile" element={<UserProfile />} />
           <Route path="/user/edit" element={<UserEditProfile />} />
+          <Route path="/bandeja" element={<BandejaEntrada />} />
 
         </Routes>
       </main>

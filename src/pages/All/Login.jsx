@@ -1,11 +1,8 @@
-// src/pages/LoginPage.jsx
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import TituloCrearInicio from '../../components/TituloCrearInicio';
 import { LabeledInput } from '../../components/formularios/LabelGenerico';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import logo from '../../assets/logo.png';
 
 const LoginPage = ({ onLogin }) => {
   const [correo, setCorreo] = useState('');
@@ -24,24 +21,14 @@ const LoginPage = ({ onLogin }) => {
 
   return (
     <div className="container py-5">
-      <div className="row align-items-center">
-        {/* Imagen lateral */}
-        <div className="col-md-5 d-flex justify-content-center mb-4 mb-md-0">
-          <img 
-            src={logo} 
-            alt="Logo" 
-            className="img-fluid" 
-            style={{ maxWidth: '300px' }}
-          />
-        </div>
-
-        {/* Formulario de login */}
-        <div className="col-md-7">
+      <div className="row justify-content-end">
+        <div className="col-12 col-md-7">
           <TituloCrearInicio 
             texto="Iniciar sesión" 
             height="140px" 
-            fontSize="2.5rem" 
+            fontSize="clamp(1.5rem, 5vw, 2.5rem)" 
           />
+
           <p className="text-center mt-2 text-muted">
             ¿Ya tienes cuenta? Accede
           </p>

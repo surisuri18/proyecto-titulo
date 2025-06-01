@@ -19,7 +19,7 @@ exports.register = async (req, res) => {
     );
 
     // Enviar correo con enlace de confirmación (usando la función sendConfirmationEmail)
-    await sendConfirmationEmail(correo, token);
+    //await sendConfirmationEmail(correo, token);
 
     res.status(201).json({ message: 'Correo de confirmación enviado. Revisa tu bandeja.' });
   } catch (error) {

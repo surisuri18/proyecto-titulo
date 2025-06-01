@@ -1,13 +1,14 @@
 .gestion-container {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 2rem 1rem;
   text-align: center;
 }
 
 .gestion-container h2 {
-  font-size: 2rem;
+  font-size: clamp(1.8rem, 4vw, 2.2rem);
   margin-bottom: 1.5rem;
+  color: #222;
 }
 
 .acciones {
@@ -25,6 +26,7 @@
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #ccc;
+  font-size: 1rem;
 }
 
 .btn-crear {
@@ -35,12 +37,15 @@
   border-radius: 8px;
   cursor: pointer;
   white-space: nowrap;
+  font-size: 1rem;
+  transition: background-color 0.2s ease;
 }
 
 .btn-crear:hover {
   background-color: #be4dc9;
 }
 
+/* Tabla */
 .tabla-usuarios {
   width: 100%;
   border-collapse: collapse;
@@ -55,6 +60,13 @@
   padding: 12px;
   border-bottom: 1px solid #eee;
   text-align: center;
+  font-size: 0.95rem;
+}
+
+.tabla-usuarios th {
+  background-color: #f7f7f7;
+  font-weight: bold;
+  color: #333;
 }
 
 .btn-editar,
@@ -64,6 +76,7 @@
   border-radius: 6px;
   border: none;
   cursor: pointer;
+  font-size: 0.9rem;
 }
 
 .btn-editar {
@@ -82,9 +95,17 @@
 
 .btn-eliminar:hover {
   background-color: #cc4f4f;
+
 }
 
-/* Responsividad móvil */
+.acciones-botones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Responsividad */
 @media (max-width: 768px) {
   .acciones {
     flex-direction: column;
@@ -98,10 +119,23 @@
   .tabla-usuarios {
     display: block;
     overflow-x: auto;
-    width: 100%;
+  }
+}
+
+/* Extra mejora para celulares pequeños */
+@media (max-width: 480px) {
+  .acciones input {
+    min-width: 100%;
   }
 
-  .tabla-usuarios table {
-    width: 700px; /* permite hacer scroll horizontal si es necesario */
+  .btn-crear {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+
+  .tabla-usuarios th,
+  .tabla-usuarios td {
+    padding: 10px;
+    font-size: 0.85rem;
   }
 }

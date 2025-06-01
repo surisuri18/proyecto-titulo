@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../styles/PageStyles/Home.css';
 import BarraDeBusqueda from '../../components/BarraDeBusqueda';
 import BusquedaRapida from '../../components/BusquedaRapida';
@@ -9,6 +9,15 @@ import imagen2 from '../../assets/ImagenCarrusel/Carrusel2.png';
 import imagen3 from '../../assets/ImagenCarrusel/Carrusel3.png';
 
 function Home() {
+  const [proveedores, setProveedores] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:4000/api/users/proveedores')
+      .then(res => res.json())
+      .then(data => setProveedores(data))
+      .catch(err => console.error('Error al cargar proveedores:', err));
+  }, []);
+
   return (
     <div className="home-background">
       <div className="container mt-4">
@@ -21,8 +30,6 @@ function Home() {
 
         {/* Carrusel */}
         <div id="carouselHome" className="carousel slide my-4 carrusel-limitado" data-bs-ride="carousel">
-
-
           <div className="carousel-inner rounded shadow-sm">
             <div className="carousel-item active">
               <img src={imagen1} className="d-block w-100" alt="Imagen 1" />
@@ -50,14 +57,21 @@ function Home() {
           <BusquedaRapida />
         </div>
 
-        {/* Perfiles destacados */}
+        {/* Perfiles destacados dinámicos */}
         <section className="mb-4">
           <h2 className="mb-3 text-center">Perfiles Destacados</h2>
           <div className="row justify-content-center">
-            <div className="col-6 col-md-3 mb-3"><CardPrestadorPerfil /></div>
-            <div className="col-6 col-md-3 mb-3"><CardPrestadorPerfil /></div>
-            <div className="col-6 col-md-3 mb-3"><CardPrestadorPerfil /></div>
-            <div className="col-6 col-md-3 mb-3"><CardPrestadorPerfil /></div>
+            {proveedores.map((proveedor) => (
+              <div className="col-6 col-md-3 mb-3" key={proveedor._id}>
+                <CardPrestadorPerfil
+                  nombre={proveedor.nombre}
+                  oficio={proveedor.servicios?.[0] || 'Oficio no definido'}
+                  imagenUrl={null} // O puedes usar proveedor.imagen si luego lo agregas
+                  colorBarra="#4CAF50"
+                  colorEtiqueta="#2196F3"
+                />
+              </div>
+            ))}
           </div>
         </section>
       </div>

@@ -6,8 +6,11 @@
   border: none;
   border-radius: 12px;
   background-color: #fff;
-  width: 260px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  width: 100%;
+  max-width: 260px;
+  min-height: 300px;
+  margin: 0 auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .card-avatar img {
@@ -53,5 +56,5 @@
   font-weight: 500;
   border-radius: 6px;
   color: #000;
+  background-color: #e0e0e0;
 }
-

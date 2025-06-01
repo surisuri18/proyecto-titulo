@@ -3,6 +3,7 @@ import FormBase from '../../components/formularios/FormBase';
 import TituloCrearInicio from '../../components/TituloCrearInicio';
 import RegistroExitosoModal from '../../components/Popups/PopupRegistroExitoso';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../../styles/PageStyles/RegisterUser.css'; 
 
 import { registerUser } from '../../services/authService'; 
 
@@ -42,13 +43,12 @@ const fieldsUsuario = [
 
 export default function RegistroUsuario({ onSubmit }) {
   const [showModal, setShowModal] = React.useState(false);
-  const [email,     setEmail]     = React.useState('');
+  const [email, setEmail] = React.useState('');
   const [error, setError] = React.useState(null);
 
-    const handleSubmit = async (data) => {
+  const handleSubmit = async (data) => {
     setError(null);
     try {
-      // Envía datos al backend (ojo, "clave" debe coincidir con el campo backend)
       await registerUser({
         nombre: data.nombre,
         correo: data.correo,
@@ -63,12 +63,12 @@ export default function RegistroUsuario({ onSubmit }) {
 
   return (
     <div className="container py-5">
-      <div className="row justify-content-center">
-        <div className="col-md-8">
+      <div className="row justify-content-end">
+        <div className="col-12 col-md-8">
           <TituloCrearInicio
             texto="Registro de Usuario"
             height="140px"
-            fontSize="2.5rem"
+            fontSize="clamp(1.5rem, 5vw, 2.5rem)"
           />
 
           <FormBase

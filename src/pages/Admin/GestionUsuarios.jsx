@@ -3,7 +3,7 @@ import '../../styles/PageStyles/GestionUsuarios.css';
 
 function GestionUsuarios() {
   const [busqueda, setBusqueda] = useState('');
-  
+
   const usuarios = [
     { id: 1, nombre: 'Ana Torres', correo: 'ana@mail.com', tipo: 'Cliente' },
     { id: 2, nombre: 'Luis Bravo', correo: 'luis@gasfiter.cl', tipo: 'Proveedor' },
@@ -45,8 +45,10 @@ function GestionUsuarios() {
               <td>{user.correo}</td>
               <td>{user.tipo}</td>
               <td>
-                <button className="btn-editar">✏️ Editar</button>
-                <button className="btn-eliminar">🗑️ Eliminar</button>
+                <div className="acciones-botones">
+                  <button className="btn-editar">✏️ Editar</button>
+                  <button className="btn-eliminar">🗑️ Eliminar</button>
+                </div>
               </td>
             </tr>
           ))}
