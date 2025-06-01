@@ -3,6 +3,7 @@ import FormBase from '../../components/formularios/FormBase';
 import TituloCrearInicio from '../../components/TituloCrearInicio';
 import RegistroExitosoModal from '../../components/Popups/PopupRegistroExitoso';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Link } from 'react-router-dom';
 
 import { registerUser } from '../../services/authService'; 
 
@@ -91,6 +92,18 @@ export default function RegistroUsuario({ onSubmit }) {
         correo={email}
         onClose={() => setShowModal(false)}
       />
-    </div>
+      {/* Enlace al login */}
+      <div className="text-center mt-4">
+        <Link to="/login" className="btn btn-link">
+          ¿Ya tienes cuenta? Inicia sesión aquí
+        </Link>
+      </div>
+      {/* Enlace al OFRECE SERVICIOS*/}
+      <div className="text-center mt-4">
+        <Link to="/registerprovider" className="btn btn-link">
+          ¿Quieres ofrecer tus servicios?
+        </Link>
+      </div>
+    </div>  
   );
 }

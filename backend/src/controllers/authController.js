@@ -4,6 +4,7 @@ import User from '../models/user.js';
 import Proveedor from '../models/Proveedor.js';  // Importa modelo proveedor
 import bcrypt from 'bcrypt';
 
+// Registrar nuevo usuario o proveedor
 export const register = async (req, res) => {
   const { nombre, correo, clave, servicios } = req.body;
 
@@ -33,6 +34,7 @@ export const register = async (req, res) => {
   }
 };
 
+// Confirmar cuenta al hacer clic en el enlace del correo
 export const confirmEmail = async (req, res) => {
   const { token } = req.params;
 
@@ -72,6 +74,7 @@ export const confirmEmail = async (req, res) => {
   }
 };
 
+// Login para usuario o proveedor
 export const login = async (req, res) => {
   const { correo, clave } = req.body;
 
@@ -104,5 +107,19 @@ export const login = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ error: 'Error en el servidor' });
+  }
+};
+
+// Función para obtener perfiles aleatorios
+export const randomProfiles = async (req, res) => {
+  try {
+    // Saca 4 documentos aleatorios de la colección de proveedores
+    const randomProfiles = await Proveedor.aggregate([
+      { $sample: { size: 4 } }
+    ]);
+    return res.json(randomProfiles);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Error al obtener perfiles aleatorios' });
   }
 };

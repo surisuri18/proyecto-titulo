@@ -7,6 +7,7 @@ import RegistroExitosoModal from '../../components/Popups/PopupRegistroExitoso';
 import logo from '../../assets/logo.png';  
 import { registerUser } from '../../services/authService';         // Ajusta la ruta si es necesario
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Link } from 'react-router-dom';
 
 const serviciosOpciones = [
   { value: 'plomeria',     label: 'Plomería'     },
@@ -140,6 +141,13 @@ export default function RegistroProveedor({ onSubmit }) {
         correo={email}
         onClose={handleClose}
       />
+      {/* Enlace al login */}
+      <div className="text-center mt-4">
+        <Link to="/login" className="btn btn-link">
+          ¿Ya tienes cuenta? Inicia sesión aquí
+        </Link>
+      </div>
     </div>
+    
   );
 }

@@ -7,6 +7,7 @@ import FiltroBusqueda from '../../components/FiltroBusqueda';
 import imagen1 from '../../assets/ImagenCarrusel/Carrusel1.png';
 import imagen2 from '../../assets/ImagenCarrusel/Carrusel2.png';
 import imagen3 from '../../assets/ImagenCarrusel/Carrusel3.png';
+import PerfilesDestacados from '../../components/RenderizarPerfilesdestacados'
 
 function Home() {
   return (
@@ -54,10 +55,9 @@ function Home() {
         <section className="mb-4">
           <h2 className="mb-3 text-center">Perfiles Destacados</h2>
           <div className="row justify-content-center">
-            <div className="col-6 col-md-3 mb-3"><CardPrestadorPerfil /></div>
-            <div className="col-6 col-md-3 mb-3"><CardPrestadorPerfil /></div>
-            <div className="col-6 col-md-3 mb-3"><CardPrestadorPerfil /></div>
-            <div className="col-6 col-md-3 mb-3"><CardPrestadorPerfil /></div>
+            <div className="col-6 col-md-3 mb-3"></div>
+            {/* Perfiles destacados (dinámicos) */}
+            <PerfilesDestacados />
           </div>
         </section>
       </div>
