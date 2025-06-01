@@ -3,9 +3,10 @@ import FormBase from '../../components/formularios/FormBase';
 import TituloCrearInicio from '../../components/TituloCrearInicio';
 import RegistroExitosoModal from '../../components/Popups/PopupRegistroExitoso';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../styles/PageStyles/RegisterUser.css'; 
+import '../../styles/PageStyles/RegisterUser.css';
+import { Link } from 'react-router-dom';
 
-import { registerUser } from '../../services/authService'; 
+import { registerUser } from '../../services/authService';
 
 const fieldsUsuario = [
   {
@@ -71,6 +72,12 @@ export default function RegistroUsuario({ onSubmit }) {
             fontSize="clamp(1.5rem, 5vw, 2.5rem)"
           />
 
+          {error && (
+            <div className="alert alert-danger text-center">
+              {error}
+            </div>
+          )}
+
           <FormBase
             fields={fieldsUsuario}
             onSubmit={handleSubmit}
@@ -84,6 +91,18 @@ export default function RegistroUsuario({ onSubmit }) {
         correo={email}
         onClose={() => setShowModal(false)}
       />
+
+      {/* Enlaces adicionales */}
+      <div className="text-center mt-4">
+        <Link to="/login" className="btn btn-link">
+          ¿Ya tienes cuenta? Inicia sesión aquí
+        </Link>
+      </div>
+      <div className="text-center mt-2">
+        <Link to="/registerprovider" className="btn btn-link">
+          ¿Quieres ofrecer tus servicios?
+        </Link>
+      </div>
     </div>
   );
 }

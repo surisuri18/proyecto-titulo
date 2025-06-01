@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/PageStyles/Home.css';
 import BarraDeBusqueda from '../../components/BarraDeBusqueda';
 import BusquedaRapida from '../../components/BusquedaRapida';
-import CardPrestadorPerfil from '../../components/CardPrestadorPerfil';
 import FiltroBusqueda from '../../components/FiltroBusqueda';
 import imagen1 from '../../assets/ImagenCarrusel/Carrusel1.png';
 import imagen2 from '../../assets/ImagenCarrusel/Carrusel2.png';
 import imagen3 from '../../assets/ImagenCarrusel/Carrusel3.png';
+import CardPrestadorPerfil from '../../components/CardPrestadorPerfil'; // Asegúrate de tenerlo
 
 function Home() {
   const [proveedores, setProveedores] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch('http://localhost:4000/api/users/proveedores')
@@ -18,13 +20,18 @@ function Home() {
       .catch(err => console.error('Error al cargar proveedores:', err));
   }, []);
 
+  const handleRedirectToSearch = (query) => {
+    if (query.trim()) {
+      navigate(`/search?q=${encodeURIComponent(query.trim())}`);
+    }
+  };
+
   return (
     <div className="home-background">
       <div className="container mt-4">
-
         {/* Búsqueda + Filtro */}
         <div className="search-filter-wrapper">
-          <BarraDeBusqueda />
+          <BarraDeBusqueda onSearch={handleRedirectToSearch} />
           <FiltroBusqueda />
         </div>
 
@@ -41,7 +48,6 @@ function Home() {
               <img src={imagen3} className="d-block w-100" alt="Imagen 3" />
             </div>
           </div>
-
           <button className="carousel-control-prev" type="button" data-bs-target="#carouselHome" data-bs-slide="prev">
             <span className="carousel-control-prev-icon" aria-hidden="true"></span>
             <span className="visually-hidden">Anterior</span>
@@ -66,7 +72,7 @@ function Home() {
                 <CardPrestadorPerfil
                   nombre={proveedor.nombre}
                   oficio={proveedor.servicios?.[0] || 'Oficio no definido'}
-                  imagenUrl={null} // O puedes usar proveedor.imagen si luego lo agregas
+                  imagenUrl={proveedor.imagenUrl || null}
                   colorBarra="#4CAF50"
                   colorEtiqueta="#2196F3"
                 />

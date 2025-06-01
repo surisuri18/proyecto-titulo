@@ -1,11 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Hombre1 from '../assets/IconosUsuario/Hombre1.png';
+import { AuthContext } from '../context/AuthContext';
+
 
 const ImageDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+  const { logout } = useContext(AuthContext); // Usamos logout del contexto
   const [hoveredIndex, setHoveredIndex] = useState(null); // <- para manejar el hover
 
   const toggleDropdown = () => {
@@ -25,13 +28,18 @@ const ImageDropdown = () => {
 
   const handleNavigation = (path) => {
     setIsOpen(false);
-    navigate(path);
+    if (path === '/login') {
+      logout(); // Llama al logout para cerrar sesión
+      navigate(path); // Redirige al login
+    } else {
+      navigate(path); // Redirige a otras páginas
+    }
   };
 
   const menuItems = [
     { label: 'Perfil', path: '/user/profile' },
     { label: 'Inbox', path: '/user/inbox' },
-    { label: 'Cerrar sesión', path: '/' }
+    { label: 'Cerrar sesión', path: '/login' }
   ];
 
   return (

@@ -2,46 +2,63 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import TituloCrearInicio from '../../components/TituloCrearInicio';
 import { LabeledInput } from '../../components/formularios/LabelGenerico';
+import logo from '../../assets/logo.png'; // Asegúrate de que este path sea correcto
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const LoginPage = ({ onLogin }) => {
+/**
+ * Componente de login que gestiona la entrada del usuario.
+ * Recibe `onLogin` que es la función que maneja el login en el backend
+ * y `error` que es el mensaje de error que puede ser enviado desde el backend.
+ */
+const LoginPage = ({ onLogin, error }) => {
   const [correo, setCorreo] = useState('');
   const [clave, setClave] = useState('');
-  const [error, setError] = useState('');
+  const [localError, setLocalError] = useState('');
 
   const handleSubmit = e => {
     e.preventDefault();
     if (!correo.trim() || !clave.trim()) {
-      setError('Por favor ingresa correo y clave para continuar.');
+      setLocalError('Por favor ingresa correo y clave para continuar.');
       return;
     }
-    setError('');
+    setLocalError('');
     onLogin?.({ correo, clave });
   };
 
   return (
     <div className="container py-5">
-      <div className="row justify-content-end">
-        <div className="col-12 col-md-7">
-          <TituloCrearInicio 
-            texto="Iniciar sesión" 
-            height="140px" 
-            fontSize="clamp(1.5rem, 5vw, 2.5rem)" 
+      {(localError || error) && (
+        <div className="alert alert-danger text-center">
+          {localError || error}
+        </div>
+      )}
+
+      <div className="row align-items-center">
+        {/* Imagen lateral */}
+        <div className="col-md-5 d-flex justify-content-center mb-4 mb-md-0">
+          <img
+            src={logo}
+            alt="Logo"
+            className="img-fluid"
+            style={{ maxWidth: '300px' }}
+          />
+        </div>
+
+        {/* Formulario de login */}
+        <div className="col-md-7">
+          <TituloCrearInicio
+            texto="Iniciar sesión"
+            height="140px"
+            fontSize="clamp(1.5rem, 5vw, 2.5rem)"
           />
 
           <p className="text-center mt-2 text-muted">
             ¿Ya tienes cuenta? Accede
           </p>
 
-          {error && (
-            <div className="alert alert-danger text-center">
-              {error}
-            </div>
-          )}
-
-          <form 
-            onSubmit={handleSubmit} 
-            className="mx-auto mt-3" 
+          <form
+            onSubmit={handleSubmit}
+            className="mx-auto mt-3"
             style={{ maxWidth: '450px' }}
             noValidate
           >

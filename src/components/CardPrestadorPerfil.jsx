@@ -8,7 +8,7 @@ function CardPrestadorPerfil({ imagenUrl, nombre, oficio, colorBarra, colorEtiqu
     <div className="card-prestador-perfil">
       {/* Imagen */}
       <div className="card-avatar">
-        <img src={imagenUrl || imagenPerfil} alt="Foto del prestador" />
+        <img src={ imagenPerfil} alt="Foto del prestador" />
       </div>
 
       {/* Nombre */}

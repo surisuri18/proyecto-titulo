@@ -3,6 +3,8 @@ import FormBase from '../../components/formularios/FormBase';
 import TituloCrearInicio from '../../components/TituloCrearInicio';
 import RegistroExitosoModal from '../../components/Popups/PopupRegistroExitoso';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Link } from 'react-router-dom';
+import { registerUser } from '../../services/authService';
 
 const serviciosOpciones = [
   { value: 'plomeria',     label: 'Plomería'     },
@@ -63,27 +65,36 @@ export default function RegistroProveedor({ onSubmit }) {
   const [showModal, setShowModal] = React.useState(false);
   const [email, setEmail] = React.useState('');
 
-  const handleSubmit = data => {
-    if (data.servicios.some(s => s.value === 'otros')) {
-      const descripcion = window.prompt(
-        'Seleccionaste "Otros". Por favor describe el servicio que ofreces:',
-        ''
-      );
-      if (!descripcion || !descripcion.trim()) {
-        window.alert('Debes describir tu servicio para continuar.');
-        return;
+  const handleSubmit = async (data) => {
+    try {
+      if (data.servicios.some(s => s.value === 'otros')) {
+        const descripcion = window.prompt(
+          'Seleccionaste "Otros". Por favor describe el servicio que ofreces:',
+          ''
+        );
+        if (!descripcion || !descripcion.trim()) {
+          window.alert('Debes describir tu servicio para continuar.');
+          return;
+        }
+        const filtrados = data.servicios.filter(s => s.value !== 'otros');
+        data.servicios = [
+          ...filtrados,
+          { value: descripcion.trim(), label: descripcion.trim() }
+        ];
       }
 
-      const filtrados = data.servicios.filter(s => s.value !== 'otros');
-      data.servicios = [
-        ...filtrados,
-        { value: descripcion.trim(), label: descripcion.trim() }
-      ];
-    }
+      await registerUser({
+        nombre: data.nombre,
+        correo: data.correo,
+        clave: data.clave,
+        servicios: data.servicios.map(s => s.value)
+      });
 
-    setEmail(data.correo);
-    onSubmit?.(data);
-    setShowModal(true);
+      setEmail(data.correo);
+      setShowModal(true);
+    } catch (err) {
+      window.alert(err.error || 'Error inesperado al registrar proveedor');
+    }
   };
 
   const handleClose = () => setShowModal(false);
@@ -111,6 +122,13 @@ export default function RegistroProveedor({ onSubmit }) {
         correo={email}
         onClose={handleClose}
       />
+
+      {/* Enlace al login */}
+      <div className="text-center mt-4">
+        <Link to="/login" className="btn btn-link">
+          ¿Ya tienes cuenta? Inicia sesión aquí
+        </Link>
+      </div>
     </div>
   );
 }
