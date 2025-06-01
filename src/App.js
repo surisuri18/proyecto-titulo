@@ -48,20 +48,28 @@ function App() {
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
+
+
           <Route path="/registeruser" element={<RegisterUser />} />
-          <Route path="/registerprovider" element={<RegisterProvider />} />
+
           <Route path="/login" element={<LoginPageWrapper  />} />
           <Route path="/search" element={<SearchServices />} />
-          <Route path="/provider" element={<ProviderProfile />} />
-          <Route path="/provider/edit" element={<ProviderEditProfile />} />
+
           <Route path="/soporte" element={<Soporte />} />
           <Route path="/reporte-enviado" element={<ConfirmacionSoporte />} />
           <Route path="/reportar-usuario" element={<FormularioReporteUsuario />} />
-          <Route path="/admin" element={<MenuAdmin />} />
+
+          
+          <Route path="/admin" element={<MenuAdmin />} />   
           <Route path="/admin/usuarios" element={<GestionUsuarios />} />
           <Route path="/admin/reportes-app" element={<ReportesFuncionamiento />} />
           <Route path="/admin/reportes-usuarios" element={<ReportesUsuarios />} />
+
+          <Route path="/registerprovider" element={<RegisterProvider />} />
           <Route path="/provider/inbox" element={<ProviderInbox />} />
+          <Route path="/provider" element={<ProviderProfile />} />
+          <Route path="/provider/edit" element={<ProviderEditProfile />} />
+
           <Route path="/user/inbox" element={<UserInbox />} />
           <Route path="/user/profile" element={<UserProfile />} />
           <Route path="/user/edit" element={<UserEditProfile />} />

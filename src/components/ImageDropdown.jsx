@@ -31,7 +31,7 @@ const ImageDropdown = () => {
   const menuItems = [
     { label: 'Perfil', path: '/user/profile' },
     { label: 'Inbox', path: '/user/inbox' },
-    { label: 'Cerrar sesión', path: '/' }
+    { label: 'Cerrar sesión', path: '/login' }
   ];
 
   return (

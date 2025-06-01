@@ -1,12 +1,16 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { Link  } from 'react-router-dom';
 import '../styles/Components/NavbarLogOut.css';
 import logo from '../assets/Logo2.png';
 import ImageDropdown from './ImageDropdown'; // 👈 importa tu dropdown
+import { AuthContext } from '../context/AuthContext'; // Importa el contexto
 
 const usuarioActual = null;
 
 function NavbarLogOut() {
+
+  const { user } = useContext(AuthContext);  // `user` es el valor del usuario logueado
+
   return (
     <nav className="navbar navbar-expand-lg custom-navbar px-3">
       <div className="container-fluid position-relative d-flex justify-content-between align-items-center">
@@ -16,10 +20,12 @@ function NavbarLogOut() {
           <img src={logo} alt="Logo" className="logo-navbar" />
         </Link>
 
-        {/* Dropdown a la derecha */}
-        <div className="ms-auto">
-          <ImageDropdown />
-        </div>
+        {/* Mostrar ImageDropdown solo si hay un usuario logueado */}
+        {user && (
+          <div className="ms-auto">
+            <ImageDropdown />
+          </div>
+        )}
       </div>
     </nav>
   );
