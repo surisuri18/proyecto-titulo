@@ -123,3 +123,44 @@ export const randomProfiles = async (req, res) => {
     return res.status(500).json({ error: 'Error al obtener perfiles aleatorios' });
   }
 };
+
+/**
+ * Busca proveedores que coincidan con la query en:
+ * - nombre (contains, case-insensitive)
+ * - servicios (al menos uno coincide con la query, case-insensitive)
+ * - ciudad (contains, case-insensitive)
+ * - calificacion >= valor (si la query es un número)
+ */
+export const searchProviders = async (req, res) => {
+  try {
+    const { q } = req.query;
+    if (!q || q.trim() === '') {
+      // Si el query está vacío, devolvemos todos o un array vacío:
+      return res.json([]);
+    }
+    const term = q.trim();
+    // Si se puede convertir a número:
+    const num = parseFloat(term);
+    const isNum = !isNaN(num);
+
+    // Creamos expresiones regulares case-insensitive para texto
+    const regex = new RegExp(term, 'i');
+
+    // Armamos el filtro $or:
+    const orConditions = [
+      { nombre: { $regex: regex } },
+      { servicios: { $regex: regex } },  // Mongoose busca cada elemento del array con regex
+      { ciudad: { $regex: regex } },
+    ];
+    // Si term es numérico, también filtramos por calificación >= num
+    if (isNum) {
+      orConditions.push({ calificacion: { $gte: num } });
+    }
+
+    const results = await Proveedor.find({ $or: orConditions });
+    return res.json(results);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Error al buscar proveedores' });
+  }
+};
