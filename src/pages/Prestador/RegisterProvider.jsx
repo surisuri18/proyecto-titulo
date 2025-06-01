@@ -4,7 +4,8 @@ import React from 'react';
 import FormBase from '../../components/formularios/FormBase';
 import TituloCrearInicio from '../../components/TituloCrearInicio';
 import RegistroExitosoModal from '../../components/Popups/PopupRegistroExitoso';
-import logo from '../../assets/logo.png';           // Ajusta la ruta si es necesario
+import logo from '../../assets/logo.png';  
+import { registerUser } from '../../services/authService';         // Ajusta la ruta si es necesario
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const serviciosOpciones = [
@@ -66,30 +67,41 @@ export default function RegistroProveedor({ onSubmit }) {
   const [showModal, setShowModal] = React.useState(false);
   const [email,     setEmail]     = React.useState('');
 
-  const handleSubmit = data => {
-    // 1) Chequear “Otros”
-    if (data.servicios.some(s => s.value === 'otros')) {
-      const descripcion = window.prompt(
-        'Seleccionaste "Otros". Por favor describe el servicio que ofreces:',
-        ''
-      );
-      if (!descripcion || !descripcion.trim()) {
-        window.alert('Debes describir tu servicio para continuar.');
-        return;
-      }
-      // Reemplazar "otros" por la descripción
-      const filtrados = data.servicios.filter(s => s.value !== 'otros');
-      data.servicios = [
-        ...filtrados,
-        { value: descripcion.trim(), label: descripcion.trim() }
-      ];
+  const handleSubmit = async (data) => {
+  // 1) Chequear “Otros”
+  if (data.servicios.some(s => s.value === 'otros')) {
+    const descripcion = window.prompt(
+      'Seleccionaste "Otros". Por favor describe el servicio que ofreces:',
+      ''
+    );
+    if (!descripcion || !descripcion.trim()) {
+      window.alert('Debes describir tu servicio para continuar.');
+      return;
     }
+    // Reemplazar "otros" por la descripción
+    const filtrados = data.servicios.filter(s => s.value !== 'otros');
+    data.servicios = [
+      ...filtrados,
+      { value: descripcion.trim(), label: descripcion.trim() }
+    ];
+  }
 
-    // 2) Continuar con envío y mostrar modal
+  try {
+    // 2) Llamar al backend para registrar proveedor
+    await registerUser({
+      nombre: data.nombre,
+      correo: data.correo,
+      clave: data.clave,
+      servicios: data.servicios.map(s => s.value), // enviar solo valores
+    });
+
     setEmail(data.correo);
-    onSubmit?.(data);
     setShowModal(true);
-  };
+  } catch (err) {
+    // Manejar error (puedes mostrar alerta o estado de error)
+    window.alert(err.error || 'Error inesperado al registrar proveedor');
+  }
+};
 
   const handleClose = () => setShowModal(false);
 

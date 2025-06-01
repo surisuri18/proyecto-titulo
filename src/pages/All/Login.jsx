@@ -1,5 +1,3 @@
-// src/pages/LoginPage.jsx
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import TituloCrearInicio from '../../components/TituloCrearInicio';
@@ -7,24 +5,35 @@ import { LabeledInput } from '../../components/formularios/LabelGenerico';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from '../../assets/logo.png';
 
-const LoginPage = ({ onLogin }) => {
+/**
+ * Componente de login que gestiona la entrada del usuario.
+ * Recibe `onLogin` que es la función que maneja el login en el backend
+ * y `error` que es el mensaje de error que puede ser enviado desde el backend.
+ */
+const LoginPage = ({ onLogin, error }) => {  // Cambié 'error' para recibirlo como prop
   const [correo, setCorreo] = useState('');
   const [clave, setClave] = useState('');
-  const [error, setError] = useState('');
+  const [localError, setLocalError] = useState('');
 
   const handleSubmit = e => {
     e.preventDefault();
     if (!correo.trim() || !clave.trim()) {
-      setError('Por favor ingresa correo y clave para continuar.');
+      setLocalError('Por favor ingresa correo y clave para continuar.');
       return;
     }
-    setError('');
-     console.log('Formulario enviado:', { correo, clave });
-    onLogin?.({ correo, clave });
+    setLocalError(''); // Limpiar error local
+    onLogin?.({ correo, clave }); // Enviar los datos al backend
   };
 
   return (
     <div className="container py-5">
+      {/* Mostrar mensaje de error si hay uno (local o del backend) */}
+      {(localError || error) && (
+        <div className="alert alert-danger text-center">
+          {localError || error}
+        </div>
+      )}
+    
       <div className="row align-items-center">
         {/* Imagen lateral */}
         <div className="col-md-5 d-flex justify-content-center mb-4 mb-md-0">
@@ -46,12 +55,6 @@ const LoginPage = ({ onLogin }) => {
           <p className="text-center mt-2 text-muted">
             ¿Ya tienes cuenta? Accede
           </p>
-
-          {error && (
-            <div className="alert alert-danger text-center">
-              {error}
-            </div>
-          )}
 
           <form 
             onSubmit={handleSubmit} 
