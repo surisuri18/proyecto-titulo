@@ -24,4 +24,4 @@ yarn-debug.log*
 yarn-error.log*
 
 # ignora la carpeta de backend
-/backend/
+/backend
