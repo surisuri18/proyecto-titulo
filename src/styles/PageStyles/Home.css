@@ -1,38 +1,54 @@
 .home-background {
   position: relative;
   overflow: hidden;
+  background-color: #fff;
+  padding: 0 1rem; /* espacio lateral en móviles */
 }
 
+/* Desactivar pseudo-elemento decorativo si existía */
 @media (max-width: 768px) {
   .home-background::before {
     display: none;
   }
 }
 
-/* NUEVO BLOQUE: Estilos para juntar búsqueda y filtro */
+/* Contenedor de búsqueda + filtro */
 .search-filter-wrapper {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: 16px; /* Espacio entre barra y botón */
+  gap: 16px;
   margin: 2rem 0;
 }
 
+/* Carrusel con límite de ancho y sombra suave */
 .carrusel-limitado {
   max-width: 800px;
   margin: 0 auto;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 0 25px rgba(0, 0, 0, 0.1); /* Sombra suave difuminada */
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease;
 }
 
+/* Imágenes del carrusel */
 .carrusel-limitado img {
+  width: 100%;
+  height: auto;
   max-height: 400px;
   object-fit: cover;
+  display: block;
 }
 
+/* Sombra al hacer hover */
 .carrusel-limitado:hover {
-  box-shadow: 0 0 35px rgba(0, 0, 0, 0.15); /* Un poco más intensa al pasar el mouse */
+  box-shadow: 0 0 35px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsivo para pantallas menores a 768px */
+@media (max-width: 768px) {
+  .carrusel-limitado img {
+    max-height: 250px;
+  }
 }

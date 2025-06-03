@@ -1,5 +1,3 @@
-// src/pages/RegistroProveedor.jsx
-
 import React from 'react';
 import FormBase from '../../components/formularios/FormBase';
 import TituloCrearInicio from '../../components/TituloCrearInicio';
@@ -52,7 +50,7 @@ const fieldsProveedor = [
   {
     name: 'servicios',
     type: 'select',
-    creatable: true,         // permite teclear opciones nuevas
+    creatable: true,
     options: serviciosOpciones,
     isMulti: true,
     placeholder: '¿Qué servicios ofreces?',
@@ -66,7 +64,7 @@ const fieldsProveedor = [
 
 export default function RegistroProveedor({ onSubmit }) {
   const [showModal, setShowModal] = React.useState(false);
-  const [email,     setEmail]     = React.useState('');
+  const [email, setEmail] = React.useState('');
 
   const handleSubmit = async (data) => {
   // 1) Chequear “Otros”
@@ -108,23 +106,12 @@ export default function RegistroProveedor({ onSubmit }) {
 
   return (
     <div className="container py-5">
-      <div className="row align-items-center gx-5">
-        {/* Logo a la izquierda */}
-        <div className="col-md-5 d-flex justify-content-center mb-4 mb-md-0">
-          <img
-            src={logo}
-            alt="Logo"
-            className="img-fluid"
-            style={{ maxWidth: '300px' }}
-          />
-        </div>
-
-        {/* Formulario a la derecha */}
-        <div className="col-md-7">
+      <div className="row justify-content-end">
+        <div className="col-12 col-md-7">
           <TituloCrearInicio
             texto="Registro de Prestador de Servicios"
             height="140px"
-            fontSize="2.5rem"
+            fontSize="clamp(1.5rem, 5vw, 2.5rem)"
           />
 
           <FormBase
@@ -135,7 +122,6 @@ export default function RegistroProveedor({ onSubmit }) {
         </div>
       </div>
 
-      {/* Modal de éxito */}
       <RegistroExitosoModal
         show={showModal}
         correo={email}

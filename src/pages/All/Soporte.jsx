@@ -10,37 +10,49 @@ function Soporte() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log({ titulo, mensaje });
-
-    // Aquí podrías guardar los datos si quieres mostrar un resumen
     navigate('/reporte-enviado');
   };
 
   return (
-    <div className="soporte-container">
-      <h2>Centro de Ayuda</h2>
-      <form onSubmit={handleSubmit} className="soporte-form">
-        <label>Título del problema</label>
-        <input
-          type="text"
-          value={titulo}
-          onChange={(e) => setTitulo(e.target.value)}
-          required
-        />
+    <div className="container py-5 soporte-wrapper">
+      <div className="row justify-content-center">
+        <div className="col-12 col-md-8 col-lg-6">
+          <h2 className="text-center mb-4">Centro de Ayuda</h2>
+          <form onSubmit={handleSubmit} className="soporte-form p-4 shadow rounded bg-white">
+            <div className="mb-3">
+              <label className="form-label">Título del problema</label>
+              <input
+                type="text"
+                className="form-control"
+                value={titulo}
+                onChange={(e) => setTitulo(e.target.value)}
+                required
+              />
+            </div>
 
-        <label>Describe lo que sucede</label>
-        <textarea
-          rows="5"
-          value={mensaje}
-          onChange={(e) => setMensaje(e.target.value)}
-          required
-        />
+            <div className="mb-3">
+              <label className="form-label">Describe lo que sucede</label>
+              <textarea
+                className="form-control"
+                rows="5"
+                value={mensaje}
+                onChange={(e) => setMensaje(e.target.value)}
+                required
+              />
+            </div>
 
-        <button type="submit">Enviar reporte</button>
+            <div className="d-grid">
+              <button type="submit" className="btn btn-primary btn-lg">
+                Enviar reporte
+              </button>
+            </div>
 
-        <p className="soporte-info">
-          * Tu reporte será revisado por un miembro del equipo. Recibirás una notificación cuando haya una respuesta.
-        </p>
-      </form>
+            <p className="text-muted mt-3 small text-center soporte-info">
+              * Tu reporte será revisado por un miembro del equipo. Recibirás una notificación cuando haya una respuesta.
+            </p>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

@@ -3,9 +3,11 @@ import FormBase from '../../components/formularios/FormBase';
 import TituloCrearInicio from '../../components/TituloCrearInicio';
 import RegistroExitosoModal from '../../components/Popups/PopupRegistroExitoso';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../../styles/PageStyles/RegisterUser.css';
+import { Link } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
-import { registerUser } from '../../services/authService'; 
+import { registerUser } from '../../services/authService';
 
 const fieldsUsuario = [
   {
@@ -44,6 +46,7 @@ const fieldsUsuario = [
 export default function RegistroUsuario({ onSubmit }) {
   const [showModal, setShowModal] = React.useState(false);
   const [email, setEmail] = React.useState('');
+  const [email, setEmail] = React.useState('');
   const [error, setError] = React.useState(null);
 
   const handleSubmit = async (data) => {
@@ -64,12 +67,12 @@ export default function RegistroUsuario({ onSubmit }) {
 
   return (
     <div className="container py-5">
-      <div className="row justify-content-center">
-        <div className="col-md-8">
+      <div className="row justify-content-end">
+        <div className="col-12 col-md-8">
           <TituloCrearInicio
             texto="Registro de Usuario"
             height="140px"
-            fontSize="2.5rem"
+            fontSize="clamp(1.5rem, 5vw, 2.5rem)"
           />
 
           {/* Muestra el error si existe */}

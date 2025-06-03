@@ -1,7 +1,4 @@
-// src/pages/Home.jsx
-
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import '../../styles/PageStyles/Home.css';
 import BarraDeBusqueda from '../../components/BarraDeBusqueda';
 import BusquedaRapida from '../../components/BusquedaRapida';
@@ -10,17 +7,9 @@ import PerfilesDestacados from '../../components/RenderizarPerfilesdestacados';
 import imagen1 from '../../assets/ImagenCarrusel/Carrusel1.png';
 import imagen2 from '../../assets/ImagenCarrusel/Carrusel2.png';
 import imagen3 from '../../assets/ImagenCarrusel/Carrusel3.png';
+import CardPrestadorPerfil from '../../components/CardPrestadorPerfil'; // Asegúrate de tenerlo
 
 function Home() {
-  const navigate = useNavigate();
-
-  // Esta función redirige a /search?q=<texto>
-  const handleRedirectToSearch = (query) => {
-    if (query.trim()) {
-      navigate(`/search?q=${encodeURIComponent(query.trim())}`);
-    }
-  };
-
   return (
     <div className="home-background">
       <div className="container mt-4">
@@ -58,7 +47,7 @@ function Home() {
           <BusquedaRapida />
         </div>
 
-        {/* Perfiles destacados */}
+        {/* Perfiles destacados dinámicos */}
         <section className="mb-4">
           <h2 className="mb-3 text-center">Perfiles Destacados</h2>
           <div className="row justify-content-center">

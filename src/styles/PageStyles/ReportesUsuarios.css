@@ -1,8 +1,14 @@
 .reportes-usuarios-container {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 2rem 1rem;
   text-align: center;
+}
+
+.reportes-usuarios-container h2 {
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  margin-bottom: 2rem;
+  color: #222;
 }
 
 .lista-reportes-usuarios {
@@ -17,19 +23,21 @@
   border-radius: 12px;
   padding: 1.5rem;
   background-color: #fff;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
   text-align: left;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s ease;
 }
 
 .reporte-usuario-card.visto {
-  background-color: #f3f3f3;
-  opacity: 0.85;
+  background-color: #f0f8ff;
+  border-color: #86bce4;
+  opacity: 0.92;
 }
 
 .reporte-usuario-card h4 {
   margin-bottom: 1rem;
   color: #333;
+  font-size: 1.2rem;
 }
 
 .info-usuario {
@@ -37,13 +45,17 @@
   justify-content: space-between;
   margin-bottom: 1rem;
   gap: 2rem;
+  flex-wrap: wrap;
 }
 
 .info-usuario div {
-  flex: 1;
+  flex: 1 1 250px;
   background-color: #fafafa;
-  padding: 10px;
+  padding: 10px 12px;
   border-radius: 8px;
+  max-width: 350px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .descripcion-bloque {
@@ -57,6 +69,7 @@
 .estado {
   font-weight: bold;
   margin-top: 0.5rem;
+  color: #444;
 }
 
 .reporte-usuario-card button {
@@ -67,14 +80,39 @@
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 1rem;
 }
 
 .reporte-usuario-card button:hover {
   background-color: #be4dc9;
 }
 
+/* Responsividad móvil */
 @media (max-width: 768px) {
   .info-usuario {
     flex-direction: column;
+    gap: 1rem;
+  }
+
+  .info-usuario div {
+    max-width: 100%;
+  }
+
+  .reporte-usuario-card {
+    padding: 1rem;
+  }
+
+  .reporte-usuario-card h4 {
+    font-size: 1.1rem;
+  }
+
+  .reporte-usuario-card button {
+    width: 100%;
+    font-size: 0.95rem;
+  }
+
+  .descripcion-bloque {
+    font-size: 0.95rem;
   }
 }

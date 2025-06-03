@@ -2,22 +2,20 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import TituloCrearInicio from '../../components/TituloCrearInicio';
 import { LabeledInput } from '../../components/formularios/LabelGenerico';
+import logo from '../../assets/logo.png'; // Asegúrate de que este path sea correcto
 import 'bootstrap/dist/css/bootstrap.min.css';
 import logo from '../../assets/logo.png';
 
-/**
- * Componente de login que gestiona la entrada del usuario.
- * Recibe `onLogin` que es la función que maneja el login en el backend
- * y `error` que es el mensaje de error que puede ser enviado desde el backend.
- */
-const LoginPage = ({ onLogin, error }) => {  // Cambié 'error' para recibirlo como prop
+const LoginPage = ({ onLogin }) => {
   const [correo, setCorreo] = useState('');
   const [clave, setClave] = useState('');
+  const [localError, setLocalError] = useState('');
   const [localError, setLocalError] = useState('');
 
   const handleSubmit = e => {
     e.preventDefault();
     if (!correo.trim() || !clave.trim()) {
+      setLocalError('Por favor ingresa correo y clave para continuar.');
       setLocalError('Por favor ingresa correo y clave para continuar.');
       return;
     }
@@ -37,28 +35,29 @@ const LoginPage = ({ onLogin, error }) => {  // Cambié 'error' para recibirlo c
       <div className="row align-items-center">
         {/* Imagen lateral */}
         <div className="col-md-5 d-flex justify-content-center mb-4 mb-md-0">
-          <img 
-            src={logo} 
-            alt="Logo" 
-            className="img-fluid" 
+          <img
+            src={logo}
+            alt="Logo"
+            className="img-fluid"
             style={{ maxWidth: '300px' }}
           />
         </div>
 
         {/* Formulario de login */}
         <div className="col-md-7">
-          <TituloCrearInicio 
-            texto="Iniciar sesión" 
-            height="140px" 
-            fontSize="2.5rem" 
+          <TituloCrearInicio
+            texto="Iniciar sesión"
+            height="140px"
+            fontSize="clamp(1.5rem, 5vw, 2.5rem)"
           />
+
           <p className="text-center mt-2 text-muted">
             ¿Ya tienes cuenta? Accede
           </p>
 
-          <form 
-            onSubmit={handleSubmit} 
-            className="mx-auto mt-3" 
+          <form
+            onSubmit={handleSubmit}
+            className="mx-auto mt-3"
             style={{ maxWidth: '450px' }}
             noValidate
           >

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../../styles/PageStyles/UserProfile.css'; // Reutilizamos el mismo CSS
+import '../../styles/PageStyles/UserProfile.css';
 import usuarioDefault from '../../assets/IconosUsuario/Hombre1.png';
 
 export default function UserEditProfile({ usuario }) {
@@ -22,14 +22,13 @@ export default function UserEditProfile({ usuario }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Aquí puedes hacer un fetch o axios para guardar los cambios
     console.log('Datos actualizados:', formData);
     alert('Perfil actualizado correctamente');
   };
 
   return (
-    <div className="container perfil-usuario">
-      <div className="card perfil-card shadow">
+    <div className="container perfil-usuario d-flex align-items-center justify-content-center py-5">
+      <div className="card perfil-card shadow w-100" style={{ maxWidth: '550px' }}>
         <div className="card-body text-center">
           <img
             src={formData.foto}
@@ -37,7 +36,7 @@ export default function UserEditProfile({ usuario }) {
             className="foto-perfil rounded-circle mb-3 shadow-sm"
           />
 
-          <form onSubmit={handleSubmit} className="text-start px-3 px-md-5">
+          <form onSubmit={handleSubmit} className="text-start px-3 px-md-4">
             <div className="mb-3">
               <label className="form-label">Nombre</label>
               <input
@@ -65,14 +64,14 @@ export default function UserEditProfile({ usuario }) {
               <input
                 type="text"
                 name="foto"
-                className="form-control"
+                className="form-control text-break"
                 value={formData.foto}
                 onChange={handleChange}
               />
             </div>
 
             <div className="text-center">
-              <button type="submit" className="btn btn-primary mt-2">
+              <button type="submit" className="btn btn-dark btn-lg w-100 mt-3">
                 Guardar Cambios
               </button>
             </div>

@@ -3,30 +3,35 @@
   margin: 40px auto;
   padding: 2rem;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
 }
 
 .menu-admin h2 {
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 4vw, 2rem);
   margin-bottom: 0.5rem;
   color: #222;
 }
 
 .subtitulo {
-  font-size: 1.1rem;
+  font-size: clamp(1rem, 2.5vw, 1.1rem);
   margin-bottom: 2rem;
   text-decoration: underline;
   color: #444;
 }
 
-/* Tarjetas en una fila con wrap si es necesario */
 .tarjeta-grid {
   display: flex;
   justify-content: center;
   gap: 2rem;
   flex-wrap: wrap;
+  width: 100%;
+  max-width: 1000px;
 }
 
-/* Tarjeta individual */
 .tarjeta {
   background-color: white;
   border: 2px solid black;
@@ -59,12 +64,14 @@
   font-size: 1rem;
 }
 
-.menu-admin {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 80vh; /* ocupa gran parte de la pantalla */
-  padding: 2rem;
-  text-align: center;
+@media (max-width: 400px) {
+  .tarjeta {
+    padding: 1.5rem 1rem;
+    max-width: 100%;
+    flex: 1 1 100%;
+  }
+
+  .tarjeta-grid {
+    gap: 1rem;
+  }
 }
