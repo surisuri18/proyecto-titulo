@@ -5,7 +5,6 @@ import RegistroExitosoModal from '../../components/Popups/PopupRegistroExitoso';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../styles/PageStyles/RegisterUser.css';
 import { Link } from 'react-router-dom';
-import { Link } from 'react-router-dom';
 
 import { registerUser } from '../../services/authService';
 
@@ -45,7 +44,6 @@ const fieldsUsuario = [
 
 export default function RegistroUsuario({ onSubmit }) {
   const [showModal, setShowModal] = React.useState(false);
-  const [email, setEmail] = React.useState('');
   const [email, setEmail] = React.useState('');
   const [error, setError] = React.useState(null);
 

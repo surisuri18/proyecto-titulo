@@ -4,18 +4,15 @@ import TituloCrearInicio from '../../components/TituloCrearInicio';
 import { LabeledInput } from '../../components/formularios/LabelGenerico';
 import logo from '../../assets/logo.png'; // Asegúrate de que este path sea correcto
 import 'bootstrap/dist/css/bootstrap.min.css';
-import logo from '../../assets/logo.png';
 
 const LoginPage = ({ onLogin }) => {
   const [correo, setCorreo] = useState('');
   const [clave, setClave] = useState('');
   const [localError, setLocalError] = useState('');
-  const [localError, setLocalError] = useState('');
 
   const handleSubmit = e => {
     e.preventDefault();
     if (!correo.trim() || !clave.trim()) {
-      setLocalError('Por favor ingresa correo y clave para continuar.');
       setLocalError('Por favor ingresa correo y clave para continuar.');
       return;
     }
@@ -26,9 +23,9 @@ const LoginPage = ({ onLogin }) => {
   return (
     <div className="container py-5">
       {/* Mostrar mensaje de error si hay uno (local o del backend) */}
-      {(localError || error) && (
+      {(localError ) && (
         <div className="alert alert-danger text-center">
-          {localError || error}
+          {localError }
         </div>
       )}
     

@@ -10,7 +10,6 @@ import Soporte from './pages/All/Soporte';
 import ConfirmacionSoporte from './pages/All/ConfirmacionSoporte';
 import FormularioReporteUsuario from './pages/All/FormularioReporteUsuario';
 import BandejaEntrada from './pages/All/BandejaEntrada';
-import ConfirmarCuenta from './pages/All/ConfirmarCuenta';
 
 import RegisterUser from './pages/Cliente/RegisterUser';
 import SearchServices from './pages/Cliente/SearchServices';
@@ -19,7 +18,6 @@ import UserProfile from './pages/Cliente/UserProfile';
 import UserEditProfile from './pages/Cliente/UserEditProfile';
 
 import RegisterProvider from './pages/Prestador/RegisterProvider';
-import SearchServices from './pages/Cliente/SearchServices';
 import ProviderProfile from './pages/Prestador/ProviderProfile';
 import ProviderEditProfile from './pages/Prestador/ProviderEditProfile';
 import ProviderInbox from './pages/Prestador/ProviderInbox';
@@ -29,8 +27,6 @@ import GestionUsuarios from './pages/Admin/GestionUsuarios';
 import ReportesFuncionamiento from './pages/Admin/ReportesFuncionamiento';
 import ReportesUsuarios from './pages/Admin/ReportesUsuarios';
 
-import LoginPageWrapper from './pages/All/LoginPageWrapper';
-import { AuthProvider } from './context/AuthContext';
 import ConfirmarCuenta from './pages/All/ConfirmarCuenta';
 import { AuthProvider } from './context/AuthContext';
 import LoginPageWrapper from './pages/All/LoginPageWrapper'
