@@ -2,8 +2,8 @@ import React from 'react';
 import Inbox from '../All/Inbox';
 
 export default function UserInbox() {
-  const clienteId = '683c87da5df0c60790d6ebda';
-  const proveedorId = '683c87ed5df0c60790d6ebdd';
+  const clienteId = '683b91ff63cbc45c099b199c';
+  const proveedorId = '683b9d92a80e2fede82a3576';
 
   return (
     <Inbox
