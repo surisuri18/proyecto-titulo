@@ -7,7 +7,6 @@ import PerfilesDestacados from '../../components/RenderizarPerfilesdestacados';
 import imagen1 from '../../assets/ImagenCarrusel/Carrusel1.png';
 import imagen2 from '../../assets/ImagenCarrusel/Carrusel2.png';
 import imagen3 from '../../assets/ImagenCarrusel/Carrusel3.png';
-import CardPrestadorPerfil from '../../components/CardPrestadorPerfil'; // Asegúrate de tenerlo
 
 function Home() {
   return (
