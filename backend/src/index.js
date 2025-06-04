@@ -1,63 +1,97 @@
+// src/index.js
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const http = require('http');
 const { Server } = require('socket.io');
+const Message = require('./models/Message'); // <-- Nombre exacto y ruta correcta
 
 const app = express();
 const server = http.createServer(app);
 
-// Configuración de CORS
 app.use(cors());
 app.use(express.json());
 
-// Conexión a MongoDB
-mongoose.connect(process.env.MONGO_URI)
+mongoose
+  .connect(process.env.MONGO_URI)
   .then(() => console.log('🔗 MongoDB conectado'))
-  .catch(err => console.error('❌ Error de conexión MongoDB:', err));
+  .catch((err) => console.error('❌ Error de conexión MongoDB:', err));
 
 // Importar rutas
 const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/users');
+const providerRoutes = require('./routes/providers');
 const chatRoutes = require('./routes/chat');
 
-// Usar rutas
 app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
+app.use('/api/providers', providerRoutes);
 app.use('/api/chat', chatRoutes);
 
-// Ruta raíz
-app.get('/', (req, res) => {
-  res.send('Servidor backend corriendo');
-});
+app.get('/', (req, res) => res.send('Servidor backend corriendo'));
 
-// Configurar Socket.io
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:3000', // URL del frontend
+    origin: 'http://localhost:3000',
     methods: ['GET', 'POST']
   }
 });
 
-// Manejo de eventos Socket.io
 io.on('connection', (socket) => {
-  console.log('🟢 Usuario conectado:', socket.id);
+  const { userId, userModel } = socket.handshake.query;
+  if (!userId || !userModel) return;
 
-  // Recibir y reenviar mensaje
-  socket.on('enviar-mensaje', (mensaje) => {
-    console.log('📨 Mensaje recibido:', mensaje);
-    socket.broadcast.emit('recibir-mensaje', mensaje); // Enviar a todos menos al emisor
+  const salaPropia = `${userModel}_${userId}`;
+  socket.join(salaPropia);
+
+  // Cuando recibimos un mensaje por Socket.IO
+  socket.on('enviar-mensaje', async (data) => {
+    try {
+      const { emisorId, emisorModel, receptorId, receptorModel, contenido } = data;
+      // 1) Guardar en MongoDB
+      const nuevoMensaje = new Message({
+        emisor: emisorId,
+        emisorModel,
+        receptor: receptorId,
+        receptorModel,
+        contenido,
+        enviadoEn: Date.now()
+      });
+      await nuevoMensaje.save();
+
+      // 2) Emitir al receptor
+      const salaReceptor = `${receptorModel}_${receptorId}`;
+      io.to(salaReceptor).emit('recibir-mensaje', {
+        _id: nuevoMensaje._id,
+        emisor: emisorId,
+        emisorModel,
+        receptor: receptorId,
+        receptorModel,
+        contenido,
+        enviadoEn: nuevoMensaje.enviadoEn
+      });
+
+      // 3) Avisa al emisor que el mensaje se guardó
+      io.to(salaPropia).emit('mensaje-guardado', {
+        _id: nuevoMensaje._id,
+        emisor: emisorId,
+        emisorModel,
+        receptor: receptorId,
+        receptorModel,
+        contenido,
+        enviadoEn: nuevoMensaje.enviadoEn
+      });
+    } catch (err) {
+      console.error('❌ Error guardando mensaje:', err);
+      io.to(salaPropia).emit('error-mensaje', {
+        mensaje: 'No se pudo guardar el mensaje.'
+      });
+    }
   });
 
-  // Desconexión
   socket.on('disconnect', () => {
-    console.log('🔴 Usuario desconectado:', socket.id);
+    socket.leave(salaPropia);
   });
 });
 
-// Iniciar servidor
 const PORT = process.env.PORT || 4000;
-server.listen(PORT, () => {
-  console.log(`🚀 Servidor escuchando en http://localhost:${PORT}`);
-});
+server.listen(PORT, () => console.log(`🚀 Servidor escuchando en http://localhost:${PORT}`));

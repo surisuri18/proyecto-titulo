@@ -1,3 +1,4 @@
+// src/pages/Cliente/RegistroUsuario.jsx
 import React from 'react';
 import FormBase from '../../components/formularios/FormBase';
 import TituloCrearInicio from '../../components/TituloCrearInicio';
@@ -42,23 +43,31 @@ const fieldsUsuario = [
   }
 ];
 
-export default function RegistroUsuario({ onSubmit }) {
+export default function RegistroUsuario() {
   const [showModal, setShowModal] = React.useState(false);
   const [email, setEmail] = React.useState('');
   const [error, setError] = React.useState(null);
 
   const handleSubmit = async (data) => {
-    setError(null); // limpia errores previos
+    setError(null); // Limpia errores previos
+
+    // Validar que 'clave' y 'confirmClave' coincidan
+    if (data.clave !== data.confirmClave) {
+      setError('Las contraseñas no coinciden');
+      return;
+    }
+
     try {
+      // Llamada al endpoint /api/auth/register
       await registerUser({
         nombre: data.nombre,
         correo: data.correo,
         clave: data.clave,
+        // Para un registro de usuario normal, NO enviamos 'servicios'
       });
       setEmail(data.correo);
       setShowModal(true);
     } catch (err) {
-      // Aquí muestras el error que venga del backend
       setError(err.error || 'Error inesperado');
     }
   };
@@ -73,7 +82,6 @@ export default function RegistroUsuario({ onSubmit }) {
             fontSize="clamp(1.5rem, 5vw, 2.5rem)"
           />
 
-          {/* Muestra el error si existe */}
           {error && (
             <div className="alert alert-danger text-center">
               {error}
@@ -93,18 +101,17 @@ export default function RegistroUsuario({ onSubmit }) {
         correo={email}
         onClose={() => setShowModal(false)}
       />
-      {/* Enlace al login */}
+
       <div className="text-center mt-4">
         <Link to="/login" className="btn btn-link">
           ¿Ya tienes cuenta? Inicia sesión aquí
         </Link>
       </div>
-      {/* Enlace al OFRECE SERVICIOS*/}
       <div className="text-center mt-4">
         <Link to="/registerprovider" className="btn btn-link">
           ¿Quieres ofrecer tus servicios?
         </Link>
       </div>
-    </div>  
+    </div>
   );
 }

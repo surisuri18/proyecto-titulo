@@ -1,11 +1,14 @@
+// src/routes/users.js
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user');
+const Provider = require('../models/Provider');
 
 // Obtener todos los proveedores
 router.get('/proveedores', async (req, res) => {
   try {
-    const proveedores = await User.find({ rol: 'proveedor' }).select('-clave');
+    // Ya no filtramos por rol; usamos el modelo Provider directamente
+    const proveedores = await Provider.find().select('-clave');
     res.json(proveedores);
   } catch (error) {
     console.error(error);
@@ -13,6 +16,7 @@ router.get('/proveedores', async (req, res) => {
   }
 });
 
+// Obtener un usuario por su ID
 router.get('/:id', async (req, res) => {
   try {
     const usuario = await User.findById(req.params.id).select('-clave');

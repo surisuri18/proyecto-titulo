@@ -1,97 +1,113 @@
-import React, { useState, useEffect } from 'react';
-import { io } from 'socket.io-client';
-import '../../styles/PageStyles/Inbox.css';
-import defaultAvatar from '../../assets/imagenPerfil.jpeg'; // asegúrate de tener esta imagen
+// src/pages/All/Inbox.jsx
+import React, { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../../context/AuthContext';
+import { useLocation } from 'react-router-dom';
+import ChatRoom from '../../components/ChatRoom';
+import axios from 'axios';
 
-const socket = io('http://localhost:4000');
+export default function Inbox() {
+  const { user } = useContext(AuthContext);
+  const location = useLocation();
 
-export default function Inbox({ miId, otroId, usuario = 'cliente' }) {
-  const [mensajes, setMensajes] = useState([]);
-  const [nuevoMensaje, setNuevoMensaje] = useState('');
-  const [contacto, setContacto] = useState({ nombre: '', imagenUrl: '' });
+  const [contacts, setContacts] = useState([]);
+  const [selected, setSelected] = useState(null);
 
-  // Obtener datos del contacto
+  // 1) Si venimos de “Iniciar chat” con un proveedor
   useEffect(() => {
-    fetch(`http://localhost:4000/api/users/${otroId}`)
-      .then(res => res.json())
-      .then(data => setContacto({ nombre: data.nombre, imagenUrl: data.imagenUrl }))
-      .catch(() => setContacto({ nombre: 'Usuario', imagenUrl: '' }));
-  }, [otroId]);
+    if (location.state && location.state.contacto) {
+      const { contactoId, contactoModel, nombre } = location.state.contacto;
+      setSelected({ _id: contactoId, userModel: contactoModel, nombre });
+    }
+  }, [location.state]);
 
-  // Cargar historial
+  // 2) Cargar “últimos mensajes”
   useEffect(() => {
-    fetch(`http://localhost:4000/api/chat/historial?usuario1=${miId}&usuario2=${otroId}`)
-      .then(res => res.json())
-      .then(data => setMensajes(data));
-  }, [miId, otroId]);
-
-  // Escuchar mensajes entrantes
-  useEffect(() => {
-    const recibir = (mensaje) => {
-      if (
-        (mensaje.emisor === otroId && mensaje.receptor === miId) ||
-        (mensaje.emisor === miId && mensaje.receptor === otroId)
-      ) {
-        setMensajes((prev) => [...prev, mensaje]);
+    const fetchContacts = async () => {
+      if (!user || !user._id || !user.userModel) return;
+      try {
+        const res = await axios.get(`/api/chat/ultimos/${user._id}/${user.userModel}`);
+        // res.data => [{ contactoId, contactoModel, ultimoMensaje, fecha, mensajeId }, ...]
+        const resultados = await Promise.all(
+          res.data.map(async (c) => {
+            let nombre = c.contactoId;
+            if (c.contactoModel === 'Provider') {
+              try {
+                const respProv = await axios.get(`/api/providers/${c.contactoId}`);
+                nombre = respProv.data.nombre;
+              } catch {
+                nombre = c.contactoId;
+              }
+            } else if (c.contactoModel === 'User') {
+              try {
+                const respUser = await axios.get(`/api/users/${c.contactoId}`);
+                nombre = respUser.data.nombre;
+              } catch {
+                nombre = c.contactoId;
+              }
+            }
+            return {
+              contactoId: c.contactoId,
+              contactoModel: c.contactoModel,
+              nombre,
+              ultimoMensaje: c.ultimoMensaje,
+              fecha: c.fecha
+            };
+          })
+        );
+        setContacts(resultados);
+      } catch (err) {
+        console.error('Error cargando contactos:', err);
       }
     };
+    fetchContacts();
+  }, [user]);
 
-    socket.on('recibir-mensaje', recibir);
-    return () => socket.off('recibir-mensaje', recibir);
-  }, [miId, otroId]);
-
-  const handleEnviar = async () => {
-    if (!nuevoMensaje.trim()) return;
-
-    const mensaje = {
-      emisor: miId,
-      receptor: otroId,
-      contenido: nuevoMensaje,
-      enviadoEn: new Date().toISOString()
-    };
-
-    socket.emit('enviar-mensaje', mensaje);
-
-    await fetch('http://localhost:4000/api/chat/enviar', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(mensaje)
-    });
-
-    setMensajes((prev) => [...prev, mensaje]);
-    setNuevoMensaje('');
-  };
+  if (!user) {
+    return <div>Debes iniciar sesión para ver tus mensajes.</div>;
+  }
 
   return (
-    <div className="chat-wrapper">
-      {/* Cabecera con avatar y nombre */}
-      <div className="chat-header">
-        <img src={contacto.imagenUrl || defaultAvatar} alt="Avatar" className="chat-avatar" />
-        <span className="chat-nombre">{contacto.nombre}</span>
+    <div style={{ maxWidth: 500, margin: '0 auto', padding: 10 }}>
+      <h2>Mis Chats</h2>
+      <div style={{ border: '1px solid #ccc', padding: 10 }}>
+        {contacts.length === 0 && !selected && (
+          <p>No tienes conversaciones aún.</p>
+        )}
+        <ul style={{ listStyle: 'none', padding: 0 }}>
+          {contacts.map((c) => (
+            <li key={c.contactoId}>
+              <button
+                onClick={() =>
+                  setSelected({
+                    _id: c.contactoId,
+                    userModel: c.contactoModel,
+                    nombre: c.nombre
+                  })
+                }
+                style={{
+                  width: '100%',
+                  textAlign: 'left',
+                  padding: '8px 12px',
+                  border: 'none',
+                  background: '#f9f9f9',
+                  marginBottom: 5,
+                  cursor: 'pointer'
+                }}
+              >
+                {c.nombre} ({c.contactoModel})
+                <br />
+                <small style={{ fontSize: '0.8rem', color: '#666' }}>
+                  {c.ultimoMensaje} •{' '}
+                  {new Date(c.fecha).toLocaleDateString()}{' '}
+                  {new Date(c.fecha).toLocaleTimeString()}
+                </small>
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
 
-      {/* Mensajes */}
-      <div className="chat-body">
-        {mensajes.map((msg, idx) => (
-          <div
-            key={idx}
-            className={`chat-burbuja ${msg.emisor === miId ? 'chat-yo' : 'chat-otro'}`}
-          >
-            {msg.contenido}
-          </div>
-        ))}
-      </div>
-
-      {/* Input */}
-      <div className="chat-input-bar">
-        <input
-          type="text"
-          placeholder="Escribe un mensaje..."
-          value={nuevoMensaje}
-          onChange={(e) => setNuevoMensaje(e.target.value)}
-        />
-        <button onClick={handleEnviar}>Enviar</button>
-      </div>
+      {selected && <ChatRoom miUsuario={user} otroUsuario={selected} />}
     </div>
   );
 }

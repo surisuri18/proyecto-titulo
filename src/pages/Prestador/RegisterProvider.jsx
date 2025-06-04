@@ -1,18 +1,20 @@
+// src/pages/Prestador/RegistroProveedor.jsx
 import React from 'react';
 import FormBase from '../../components/formularios/FormBase';
 import TituloCrearInicio from '../../components/TituloCrearInicio';
 import RegistroExitosoModal from '../../components/Popups/PopupRegistroExitoso';
-import logo from '../../assets/logo.png';  
-import { registerUser } from '../../services/authService';         // Ajusta la ruta si es necesario
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../../styles/PageStyles/RegisterUser.css'; // Puedes crear uno específico para proveedor
 import { Link } from 'react-router-dom';
 
+import { registerUser } from '../../services/authService';
+
 const serviciosOpciones = [
-  { value: 'plomeria',     label: 'Plomería'     },
+  { value: 'plomeria', label: 'Plomería' },
   { value: 'electricidad', label: 'Electricidad' },
-  { value: 'limpieza',     label: 'Limpieza'     },
-  { value: 'jardineria',   label: 'Jardinería'   },
-  { value: 'otros',        label: 'Otros'        },
+  { value: 'limpieza', label: 'Limpieza' },
+  { value: 'jardineria', label: 'Jardinería' },
+  { value: 'otros', label: 'Otros' }
 ];
 
 const fieldsProveedor = [
@@ -55,54 +57,74 @@ const fieldsProveedor = [
     isMulti: true,
     placeholder: '¿Qué servicios ofreces?',
     rules: {
-      validate: val =>
-        (val && val.length > 0) ||
-        'Debes seleccionar al menos un servicio'
+      validate: (val) =>
+        (val && val.length > 0) || 'Debes seleccionar al menos un servicio'
     }
+  },
+  {
+    name: 'ciudad',
+    label: 'Ciudad',
+    type: 'text',
+    placeholder: 'Ej: Santiago',
+    rules: { required: 'La ciudad es obligatoria' }
+  },
+  {
+    name: 'descripcion',
+    label: 'Descripción breve',
+    type: 'textarea',
+    placeholder: 'Cuéntanos sobre tu experiencia',
+    rules: { required: 'La descripción es obligatoria' }
   }
 ];
 
-export default function RegistroProveedor({ onSubmit }) {
+export default function RegistroProveedor() {
   const [showModal, setShowModal] = React.useState(false);
   const [email, setEmail] = React.useState('');
+  const [error, setError] = React.useState(null);
 
   const handleSubmit = async (data) => {
-  // 1) Chequear “Otros”
-  if (data.servicios.some(s => s.value === 'otros')) {
-    const descripcion = window.prompt(
-      'Seleccionaste "Otros". Por favor describe el servicio que ofreces:',
-      ''
-    );
-    if (!descripcion || !descripcion.trim()) {
-      window.alert('Debes describir tu servicio para continuar.');
+    setError(null);
+
+    // 1) Validar contraseñas
+    if (data.clave !== data.confirmClave) {
+      setError('Las contraseñas no coinciden');
       return;
     }
-    // Reemplazar "otros" por la descripción
-    const filtrados = data.servicios.filter(s => s.value !== 'otros');
-    data.servicios = [
-      ...filtrados,
-      { value: descripcion.trim(), label: descripcion.trim() }
-    ];
-  }
 
-  try {
-    // 2) Llamar al backend para registrar proveedor
-    await registerUser({
-      nombre: data.nombre,
-      correo: data.correo,
-      clave: data.clave,
-      servicios: data.servicios.map(s => s.value), // enviar solo valores
-    });
+    // 2) Si seleccionó “otros”, pedir descripción manual (opcional)
+    if (data.servicios.some((s) => s.value === 'otros')) {
+      const descripcionExtra = window.prompt(
+        'Seleccionaste "Otros". Por favor describe el servicio que ofreces:',
+        ''
+      );
+      if (!descripcionExtra || !descripcionExtra.trim()) {
+        window.alert('Debes describir tu servicio para continuar.');
+        return;
+      }
+      const filtrados = data.servicios.filter((s) => s.value !== 'otros');
+      data.servicios = [
+        ...filtrados,
+        { value: descripcionExtra.trim(), label: descripcionExtra.trim() }
+      ];
+    }
 
-    setEmail(data.correo);
-    setShowModal(true);
-  } catch (err) {
-    // Manejar error (puedes mostrar alerta o estado de error)
-    window.alert(err.error || 'Error inesperado al registrar proveedor');
-  }
-};
+    try {
+      // 3) Llamada al mismo endpoint /api/auth/register
+      await registerUser({
+        nombre: data.nombre,
+        correo: data.correo,
+        clave: data.clave,
+        servicios: data.servicios.map((s) => s.value),
+        ciudad: data.ciudad,
+        descripcion: data.descripcion
+      });
 
-  const handleClose = () => setShowModal(false);
+      setEmail(data.correo);
+      setShowModal(true);
+    } catch (err) {
+      setError(err.error || 'Error inesperado al registrar proveedor');
+    }
+  };
 
   return (
     <div className="container py-5">
@@ -113,6 +135,12 @@ export default function RegistroProveedor({ onSubmit }) {
             height="140px"
             fontSize="clamp(1.5rem, 5vw, 2.5rem)"
           />
+
+          {error && (
+            <div className="alert alert-danger text-center">
+              {error}
+            </div>
+          )}
 
           <FormBase
             fields={fieldsProveedor}
@@ -125,15 +153,14 @@ export default function RegistroProveedor({ onSubmit }) {
       <RegistroExitosoModal
         show={showModal}
         correo={email}
-        onClose={handleClose}
+        onClose={() => setShowModal(false)}
       />
-      {/* Enlace al login */}
+
       <div className="text-center mt-4">
         <Link to="/login" className="btn btn-link">
           ¿Ya tienes cuenta? Inicia sesión aquí
         </Link>
       </div>
     </div>
-    
   );
 }

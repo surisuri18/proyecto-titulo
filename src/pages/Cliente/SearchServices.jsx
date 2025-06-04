@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import BarraDeBusqueda from '../../components/BarraDeBusqueda';
 import FiltroBusqueda from '../../components/FiltroBusqueda';
-import CardPrestadorPerfil from '../../components/CardPrestadorPerfil';
+import CardPrestadorPerfil from '../../components/PrestadorServicio/CardPrestadorPerfil';
 import axios from 'axios';
 
 function SearchServices() {

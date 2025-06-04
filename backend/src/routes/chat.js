@@ -1,55 +1,85 @@
+// src/routes/chat.js
 const express = require('express');
+const mongoose = require('mongoose');
 const router = express.Router();
-const Message = require('../models/message');
+const Message = require('../models/Message');
 
-// Enviar mensaje
+// POST /api/chat/enviar
 router.post('/enviar', async (req, res) => {
-  const { emisor, receptor, contenido } = req.body;
-
-  if (!emisor || !receptor || !contenido) {
+  const { emisorId, emisorModel, receptorId, receptorModel, contenido } = req.body;
+  if (!emisorId || !emisorModel || !receptorId || !receptorModel || !contenido) {
     return res.status(400).json({ error: 'Faltan campos obligatorios' });
   }
-
   try {
-    const mensaje = new Message({ emisor, receptor, contenido });
+    const mensaje = new Message({
+      emisor: emisorId,
+      emisorModel,
+      receptor: receptorId,
+      receptorModel,
+      contenido
+    });
     await mensaje.save();
-    res.status(201).json({ message: 'Mensaje enviado', mensaje });
+    return res.status(201).json({ message: 'Mensaje enviado', mensaje });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al enviar mensaje' });
+    console.error('Error al guardar mensaje:', error);
+    return res.status(500).json({ error: 'Error interno al enviar el mensaje.' });
   }
 });
 
-// Obtener historial entre dos usuarios
-router.get('/historial', async (req, res) => {
-  const { usuario1, usuario2 } = req.query;
+// GET /api/chat/conversacion/:emisorId/:emisorModel/:receptorId/:receptorModel
+router.get(
+  '/conversacion/:emisorId/:emisorModel/:receptorId/:receptorModel',
+  async (req, res) => {
+    const { emisorId, emisorModel, receptorId, receptorModel } = req.params;
+    if (!emisorId || !emisorModel || !receptorId || !receptorModel) {
+      return res.status(400).json({ error: 'Faltan parámetros en la URL.' });
+    }
+    try {
+      // Convertimos a ObjectId usando 'new'
+      const emisorOID = new mongoose.Types.ObjectId(emisorId);
+      const receptorOID = new mongoose.Types.ObjectId(receptorId);
 
-  try {
-    const mensajes = await Message.find({
-      $or: [
-        { emisor: usuario1, receptor: usuario2 },
-        { emisor: usuario2, receptor: usuario1 }
-      ]
-    }).sort({ enviadoEn: 1 });
+      const mensajes = await Message.find({
+        $or: [
+          {
+            emisor: emisorOID,
+            emisorModel,
+            receptor: receptorOID,
+            receptorModel
+          },
+          {
+            emisor: receptorOID,
+            emisorModel: receptorModel,
+            receptor: emisorOID,
+            receptorModel: emisorModel
+          }
+        ]
+      }).sort({ enviadoEn: 1 });
 
-    res.json(mensajes);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al obtener mensajes' });
+      return res.json(mensajes);
+    } catch (error) {
+      console.error('Error al obtener conversación:', error);
+      return res.status(500).json({ error: 'Error al obtener la conversación.' });
+    }
   }
-});
+);
 
-// NUEVA RUTA: Últimos mensajes por contacto
-router.get('/ultimos/:userId', async (req, res) => {
-  const { userId } = req.params;
-
+// GET /api/chat/ultimos/:userId/:userModel
+router.get('/ultimos/:userId/:userModel', async (req, res) => {
+  const { userId, userModel } = req.params;
+  if (!userId || !userModel) {
+    return res.status(400).json({ error: 'Faltan parámetros userId o userModel.' });
+  }
   try {
-    const mensajes = await Message.aggregate([
+    // Convertimos a ObjectId usando 'new'
+    const userOID = new mongoose.Types.ObjectId(userId);
+
+    const ultimos = await Message.aggregate([
       {
         $match: {
           $or: [
-            { emisor: userId },
-            { receptor: userId }
+            { emisor: userOID, emisorModel: userModel },
+            { receptor: userOID, receptorModel: userModel }
           ]
         }
       },
@@ -57,22 +87,42 @@ router.get('/ultimos/:userId', async (req, res) => {
       {
         $group: {
           _id: {
-            $cond: [
-              { $eq: ['$emisor', userId] },
-              '$receptor',
-              '$emisor'
-            ]
+            contactoId: {
+              $cond: [
+                { $eq: ['$emisor', userOID] },
+                '$receptor',
+                '$emisor'
+              ]
+            },
+            contactoModel: {
+              $cond: [
+                { $eq: ['$emisor', userOID] },
+                '$receptorModel',
+                '$emisorModel'
+              ]
+            }
           },
           ultimoMensaje: { $first: '$contenido' },
-          enviadoEn: { $first: '$enviadoEn' }
+          fecha: { $first: '$enviadoEn' },
+          mensajeId: { $first: '$_id' }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          contactoId: '$_id.contactoId',
+          contactoModel: '$_id.contactoModel',
+          ultimoMensaje: 1,
+          fecha: 1,
+          mensajeId: 1
         }
       }
     ]);
 
-    res.json(mensajes);
+    return res.json(ultimos);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error al obtener últimos mensajes' });
+    console.error('Error al obtener últimos mensajes:', error);
+    return res.status(500).json({ error: 'Error al obtener los últimos mensajes.' });
   }
 });
 

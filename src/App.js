@@ -13,14 +13,12 @@ import BandejaEntrada from './pages/All/BandejaEntrada';
 
 import RegisterUser from './pages/Cliente/RegisterUser';
 import SearchServices from './pages/Cliente/SearchServices';
-import UserInbox from './pages/Cliente/UserInbox';
 import UserProfile from './pages/Cliente/UserProfile';
 import UserEditProfile from './pages/Cliente/UserEditProfile';
 
 import RegisterProvider from './pages/Prestador/RegisterProvider';
 import ProviderProfile from './pages/Prestador/ProviderProfile';
 import ProviderEditProfile from './pages/Prestador/ProviderEditProfile';
-import ProviderInbox from './pages/Prestador/ProviderInbox';
 
 import MenuAdmin from './pages/Admin/MenuAdmin';
 import GestionUsuarios from './pages/Admin/GestionUsuarios';
@@ -30,7 +28,8 @@ import ReportesUsuarios from './pages/Admin/ReportesUsuarios';
 import ConfirmarCuenta from './pages/All/ConfirmarCuenta';
 import { AuthProvider } from './context/AuthContext';
 import LoginPageWrapper from './pages/All/LoginPageWrapper'
-//import LoginPage from './pages/All/Login';
+import Inbox from './pages/All/Inbox'
+
 
 function App() {
   const [desc, setDesc] = useState('');
@@ -58,15 +57,15 @@ function App() {
 
             {/* Rutas cliente */}
             <Route path="/registeruser" element={<RegisterUser />} />
-            <Route path="/user/inbox" element={<UserInbox />} />
             <Route path="/user/profile" element={<UserProfile />} />
             <Route path="/user/edit" element={<UserEditProfile />} />
+            <Route path="/inbox" element={<Inbox />} />
+
 
             {/* Rutas proveedor */}
             <Route path="/registerprovider" element={<RegisterProvider />} />
-            <Route path="/provider" element={<ProviderProfile />} />
+            <Route path="/provider/:id" element={<ProviderProfile />} />
             <Route path="/provider/edit" element={<ProviderEditProfile />} />
-            <Route path="/provider/inbox" element={<ProviderInbox />} />
 
             {/* Rutas admin */}
             <Route path="/admin" element={<MenuAdmin />} />

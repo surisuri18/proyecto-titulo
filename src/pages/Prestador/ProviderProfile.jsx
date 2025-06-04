@@ -1,64 +1,116 @@
-import React from 'react';
+// src/pages/Prestador/ProviderProfile.jsx
+import React, { useContext, useEffect, useState } from 'react';
 import { FaMapMarkerAlt } from 'react-icons/fa';
+import { useNavigate, useParams } from 'react-router-dom';
 import Valoracion from '../../components/PrestadorServicio/Valoracion';
 import Horario from '../../components/Horario';
+import { AuthContext } from '../../context/AuthContext';
+import axios from 'axios';
 import '../../styles/PageStyles/ProviderProfile.css';
 import fotoPerfil from '../../assets/imagenPerfil.jpeg';
+//este componente es el detalle del perfil de un proveedor al apretar su preview
 
-const disponibilidadMock = {
-  lunes: ['09:00', '10:00', '11:00'],
-  martes: ['14:00', '15:00'],
-  miercoles: [],
-  jueves: ['09:00', '10:00', '11:00', '12:00'],
-  viernes: ['16:00'],
-  sabado: [],
-  domingo: []
-};
+export default function ProviderProfile() {
+  const { user, token } = useContext(AuthContext);
+  const { id: providerId } = useParams();
+  const navigate = useNavigate();
 
-function ProviderProfile() {
+  const [proveedor, setProveedor] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProveedor = async () => {
+      try {
+        const config = {};
+        if (token) {
+          config.headers = { Authorization: `Bearer ${token}` };
+        }
+
+        const res = await axios.get(
+          `http://localhost:4000/api/providers/${providerId}`,
+          config
+        );
+        setProveedor(res.data);
+      } catch (err) {
+        console.error('Error al obtener proveedor:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProveedor();
+  }, [providerId, token]);
+
+  if (loading) {
+    return <div>Cargando perfil de proveedor...</div>;
+  }
+
+  if (!proveedor) {
+    return <div>No se encontró el proveedor.</div>;
+  }
+
+  const handleIniciarChat = () => {
+    if (!user || user.userModel !== 'User') {
+      alert('Debes iniciar sesión como usuario para chatear con un proveedor.');
+      return;
+    }
+    // Preparo el objeto “contacto” que Inbox leerá
+    const contacto = {
+      contactoId: proveedor._id,
+      contactoModel: 'Provider',
+      nombre: proveedor.nombre
+    };
+    navigate('/inbox', { state: { contacto } });
+  };
+
   return (
-    <div className="container mt-5">
+    <div className="container perfil-container">
       <div className="perfil-top">
-        {/* Columna izquierda: foto + valoración + ubicación + botón */}
-        <div className="perfil-columna">
+        {/* Columna Izquierda */}
+        <div className="perfil-columna izquierda">
           <div className="perfil-foto">
-            <img src={fotoPerfil} alt="Foto del proveedor" />
+            <img
+              src={proveedor.imagenUrl || fotoPerfil}
+              alt={`Foto de ${proveedor.nombre}`}
+            />
           </div>
 
-          <Valoracion valor={4} />
+          <Valoracion valor={proveedor.calificacion || 0} />
 
           <div className="perfil-ubicacion">
             <FaMapMarkerAlt className="ubicacion-icono" />
-            <span>Región Metropolitana, Santiago</span>
+            <span>{proveedor.ciudad}</span>
           </div>
 
-          <button className="btn-chat">Iniciar chat</button>
+          <button className="btn-chat" onClick={handleIniciarChat}>
+            Iniciar chat
+          </button>
         </div>
 
-        {/* Centro: nombre, oficio y descripción */}
-        <div className="perfil-lado-derecho">
-          <h2 className="perfil-nombre">María González</h2>
-          <p className="perfil-oficio">Manicura</p>
-          <p className="perfil-descripcion">
-            Soy una profesional con más de 5 años de experiencia en diseño de uñas, estética femenina y atención a domicilio en Santiago. Me especializo en esmaltado permanente, diseños personalizados y cuidado de manos.
+        {/* Columna Central */}
+        <div className="perfil-columna centro">
+          <h2 className="perfil-nombre">{proveedor.nombre}</h2>
+          <p className="perfil-oficio">
+            {Array.isArray(proveedor.servicios)
+              ? proveedor.servicios.join(', ')
+              : '—'}
           </p>
+          <p className="perfil-descripcion">{proveedor.descripcion}</p>
         </div>
 
-        {/* Derecha: galería de imágenes */}
-        <div className="perfil-galeria">
-          <div className="galeria-imagen"></div>
-          <div className="galeria-imagen"></div>
-          <div className="galeria-imagen"></div>
-          <div className="galeria-imagen"></div>
+        {/* Columna Derecha: Galería */}
+        <div className="perfil-columna derecha perfil-galeria">
+          {Array.isArray(proveedor.galeria) &&
+            proveedor.galeria.map((imgSrc, idx) => (
+              <div className="galeria-imagen" key={idx}>
+                <img src={imgSrc} alt={`Galería ${idx + 1}`} />
+              </div>
+            ))}
         </div>
       </div>
 
       {/* Horario semanal */}
-      <Horario disponibilidad={disponibilidadMock} />
+      <Horario disponibilidad={proveedor.disponibilidad || {}} />
     </div>
   );
 }
-
-export default ProviderProfile;
-
-

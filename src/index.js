@@ -6,6 +6,10 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+// src/index.js (o en tu punto de entrada React)
+import axios from 'axios';
+axios.defaults.baseURL = 'http://localhost:4000';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

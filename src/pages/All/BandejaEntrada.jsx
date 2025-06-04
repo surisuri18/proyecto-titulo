@@ -1,28 +1,58 @@
-import React, { useEffect, useState } from 'react';
+// src/pages/All/BandejaEntrada.jsx
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import '../../styles/PageStyles/BandejaEntrada.css'; // Estilos sugeridos
 import { useNavigate } from 'react-router-dom';
-import imagenPerfil from '../../assets/imagenPerfil.jpeg'; // Imagen por defecto
+import { AuthContext } from '../../context/AuthContext';
+import imagenPerfil from '../../assets/imagenPerfil.jpeg';
+import '../../styles/PageStyles/BandejaEntrada.css';
 
-export default function BandejaEntrada({ miId, usuario }) {
-  const [conversaciones, setConversaciones] = useState([]);
+export default function BandejaEntrada() {
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [conversaciones, setConversaciones] = useState([]);
 
   useEffect(() => {
+    if (!user || !user._id || !user.userModel) return;
+
     const fetchConversaciones = async () => {
       try {
-        const res = await axios.get(`http://localhost:4000/api/chat/ultimos/${miId}`);
+        // Solicita a /api/chat/ultimos usando baseURL configurado arriba
+        const res = await axios.get(`/api/chat/ultimos/${user._id}/${user.userModel}`);
+        console.log('RES ULTIMOS MENSAJES:', res.data);
+
+        // Cada elemento: { contactoId, contactoModel, ultimoMensaje, fecha, mensajeId }
         const resultados = await Promise.all(
           res.data.map(async (conv) => {
-            const otroId = conv._id;
+            const { contactoId, contactoModel, ultimoMensaje, fecha } = conv;
+            let urlPerfil = '';
 
-            const datosUsuario = await axios.get(`http://localhost:4000/api/users/${otroId}`);
+            if (contactoModel === 'User') {
+              urlPerfil = `/api/users/${contactoId}`;
+            } else if (contactoModel === 'Provider') {
+              urlPerfil = `/api/providers/${contactoId}`;
+            }
+
+            let nombre = 'Sin nombre';
+            let imagen = imagenPerfil;
+
+            try {
+              const datosUsuario = await axios.get(urlPerfil);
+              nombre = datosUsuario.data.nombre || 'Sin nombre';
+              imagen = datosUsuario.data.imagenUrl || imagenPerfil;
+            } catch (err) {
+              console.warn(
+                `No se pudo obtener perfil de ${contactoModel} ${contactoId}`,
+                err
+              );
+            }
 
             return {
-              id: otroId,
-              nombre: datosUsuario.data.nombre,
-              imagen: datosUsuario.data.imagenUrl || imagenPerfil,
-              ultimoMensaje: conv.ultimoMensaje,
+              contactoId,
+              contactoModel,
+              nombre,
+              imagen,
+              ultimoMensaje,
+              fecha
             };
           })
         );
@@ -34,22 +64,41 @@ export default function BandejaEntrada({ miId, usuario }) {
     };
 
     fetchConversaciones();
-  }, [miId]);
+  }, [user]);
 
-  const irAChat = (otroId) => {
-    const ruta = usuario === 'cliente' ? '/cliente/inbox' : '/proveedor/inbox';
-    navigate(ruta, { state: { miId, otroId } });
+  const irAChat = (contacto) => {
+    // contacto = { contactoId, contactoModel, nombre, imagen, ultimoMensaje, fecha }
+    navigate('/inbox', { state: { contacto } });
   };
+
+  if (!user) {
+    return <div>Debes iniciar sesión para ver tu bandeja de entrada.</div>;
+  }
 
   return (
     <div className="bandeja-container">
       <h2 className="titulo-bandeja">Bandeja de entrada</h2>
+      {conversaciones.length === 0 && (
+        <p className="sin-conversaciones">No tienes conversaciones aún.</p>
+      )}
       {conversaciones.map((conv) => (
-        <div className="bandeja-item" key={conv.id} onClick={() => irAChat(conv.id)}>
-          <img src={conv.imagen} alt="perfil" className="bandeja-avatar" />
+        <div
+          className="bandeja-item"
+          key={conv.contactoId}
+          onClick={() => irAChat(conv)}
+        >
+          <img
+            src={conv.imagen}
+            alt="perfil"
+            className="bandeja-avatar"
+          />
           <div className="bandeja-info">
             <div className="bandeja-nombre">{conv.nombre}</div>
             <div className="bandeja-mensaje">{conv.ultimoMensaje}</div>
+            <div className="bandeja-fecha">
+              {new Date(conv.fecha).toLocaleDateString()}{' '}
+              {new Date(conv.fecha).toLocaleTimeString()}
+            </div>
           </div>
         </div>
       ))}
