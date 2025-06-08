@@ -2,8 +2,24 @@
 
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const multer  = require('multer');
+const path    = require('path');
+const fs      = require('fs');
 const Provider = require('../models/Provider');
 const router = express.Router();
+
+// ------------------------------------------------------------------
+// Configuración de subida de archivos (imágenes de perfil)
+// ------------------------------------------------------------------
+const uploadDir = path.join(__dirname, '../uploads');
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
+
+const storage = multer.diskStorage({
+  destination: (_, __, cb) => cb(null, uploadDir),
+  filename:  (_, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
+});
+const upload = multer({ storage });
+
 
 // ------------------------------------------------------------------
 // Función inline de autenticación
@@ -88,8 +104,8 @@ router.get(
 //    Actualiza la descripción de un proveedor
 // ------------------------------------------------------------------
 router.put(
-  '/detalle/:id',
-  // authenticate, // descomenta si quieres proteger esta ruta
+  '/:id',
+  authenticate, // descomenta si quieres proteger esta ruta
   async (req, res) => {
     try {
       const { descripcion } = req.body;
@@ -108,5 +124,25 @@ router.put(
     }
   }
 );
+//----------------------------------------------------------
+// 5) POST /api/providers/upload-profile-image/:id
+//    Sube la imagen de perfil de un proveedor
+// ------------------------------------------------------------------
+router.post('/upload-profile-image/:id', upload.single('imagen'), async (req, res) => {
+  try {
+    const proveedor = await Provider.findById(req.params.id);
+    if (!proveedor) {
+      return res.status(404).json({ error: 'Proveedor no encontrado' });
+    }
+
+    proveedor.imagenUrl = `/uploads/${req.file.filename}`;
+    await proveedor.save();
+    res.json({ message: 'Imagen actualizada', imagenUrl: proveedor.imagenUrl });
+  } catch (error) {
+    console.error('Error al subir imagen:', error);
+    res.status(500).json({ error: 'Error al subir imagen' });
+  }
+});
+
 
 module.exports = router;

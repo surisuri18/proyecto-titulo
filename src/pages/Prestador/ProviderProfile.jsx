@@ -50,7 +50,7 @@ export default function MiPerfilProvider() {
     formData.append('imagen', imageFile);
 
     try {
-      const url = 'http://localhost:4000/api/providers/upload-profile-image';
+      const url = `http://localhost:4000/api/providers/upload-profile-image/${user._id}`;
       console.log('📤 Subiendo imagen a:', url);
       const res = await axios.post(
         url,
