@@ -13,6 +13,7 @@ import BandejaEntrada from './pages/All/BandejaEntrada';
 
 import RegisterUser from './pages/Cliente/RegisterUser';
 import SearchServices from './pages/Cliente/SearchServices';
+import ReporterUser from './pages/Cliente/ReporterUser';
 import UserProfile from './pages/Cliente/UserProfile';
 import UserEditProfile from './pages/Cliente/UserEditProfile';
 
@@ -42,7 +43,6 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <NavbarLogOut />
-        <MarcaDeAgua />
         <main>
           <Routes>
             {/* Rutas generales */}
@@ -57,15 +57,16 @@ function App() {
 
             {/* Rutas cliente */}
             <Route path="/registeruser" element={<RegisterUser />} />
-            <Route path="/user/profile" element={<UserProfile />} />
+            <Route path="/reporter/user" element={<ReporterUser />} />
             <Route path="/user/edit" element={<UserEditProfile />} />
+            <Route path="/user/perfil/:id" element={<UserProfile />} />
             <Route path="/inbox" element={<Inbox />} />
 
 
             {/* Rutas proveedor */}
             <Route path="/registerprovider" element={<RegisterProvider />} />
-            <Route path="/provider/:id" element={<ProviderProfile />} />
-            <Route path="/provider/edit" element={<ProviderEditProfile />} />
+            <Route path="/provider/perfil/:id" element={<ProviderProfile />} />
+            <Route path="/provider/detalle" element={<detalle />} />
 
             {/* Rutas admin */}
             <Route path="/admin" element={<MenuAdmin />} />

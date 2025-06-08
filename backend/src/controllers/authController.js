@@ -2,14 +2,33 @@
 import jwt from 'jsonwebtoken';
 import { sendConfirmationEmail } from '../utils/mailer.js';
 import User from '../models/user.js';
-import Provider from '../models/Provider.js'; // <-- aquí debe coincidir exactamente con el nombre "Provider.js"
+import Provider from '../models/Provider.js';
 import bcrypt from 'bcrypt';
 
-// Registrar nuevo usuario o proveedor (envía correo de confirmación)
+// ------------------------------------------------------------------
+// 1) Registrar nuevo usuario o proveedor (envía correo de confirmación)
+// ------------------------------------------------------------------
 export const register = async (req, res) => {
-  const { nombre, correo, clave, servicios, ciudad, descripcion } = req.body;
+  const {
+    nombre,
+    correo,
+    clave,
+    accountType,    // 'User' o 'Provider'
+    servicios,      // solo para Provider
+    ciudad,         // solo para Provider
+    descripcion     // solo para Provider
+  } = req.body;
+
+  // Validaciones básicas
+  if (!['User', 'Provider'].includes(accountType)) {
+    return res.status(400).json({ error: 'accountType inválido.' });
+  }
+  if (accountType === 'Provider' && (!servicios || !servicios.length)) {
+    return res.status(400).json({ error: 'Un proveedor debe enviar al menos un servicio.' });
+  }
 
   try {
+    // Verificar que el correo no exista en ninguno de los dos modelos
     const existsUser = await User.findOne({ correo });
     const existsProvider = await Provider.findOne({ correo });
     if (existsUser || existsProvider) {
@@ -19,40 +38,55 @@ export const register = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(clave, 10);
-    const token = jwt.sign(
-      { nombre, correo, clave: hashedPassword, servicios, ciudad, descripcion },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
+
+    // Armamos el payload incluyendo la información relevante
+    const payload = {
+      nombre,
+      correo,
+      clave: hashedPassword,
+      accountType
+    };
+    if (accountType === 'Provider') {
+      payload.servicios = servicios;
+      payload.ciudad = ciudad;
+      payload.descripcion = descripcion;
+    }
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     await sendConfirmationEmail(correo, token);
-    res
+    return res
       .status(201)
       .json({ message: 'Correo de confirmación enviado. Revisa tu bandeja.' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error en el servidor' });
+    return res.status(500).json({ error: 'Error en el servidor' });
   }
 };
 
-// Confirmar cuenta al hacer clic en el enlace del correo
+// ------------------------------------------------------------------
+// 2) Confirmar cuenta al hacer clic en el enlace del correo
+// ------------------------------------------------------------------
 export const confirmEmail = async (req, res) => {
   const { token } = req.params;
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    const existsUser = await User.findOne({ correo: payload.correo });
-    const existsProvider = await Provider.findOne({ correo: payload.correo });
+    const { correo, accountType } = payload;
+
+    // Verificar duplicados de nuevo
+    const existsUser = await User.findOne({ correo });
+    const existsProvider = await Provider.findOne({ correo });
     if (existsUser || existsProvider) {
       return res
         .status(400)
         .json({ error: 'La cuenta ya fue creada previamente.' });
     }
 
-    if (payload.servicios && payload.servicios.length > 0) {
-      // Es proveedor
+    if (accountType === 'Provider') {
+      // Creamos proveedor con todos sus campos
       const newProvider = new Provider({
         nombre: payload.nombre,
-        correo: payload.correo,
+        correo,
         clave: payload.clave,
         servicios: payload.servicios,
         ciudad: payload.ciudad || '',
@@ -61,37 +95,35 @@ export const confirmEmail = async (req, res) => {
         calificacion: 0,
         galeria: [],
         disponibilidad: {
-          lunes: [],
-          martes: [],
-          miercoles: [],
-          jueves: [],
-          viernes: [],
-          sabado: [],
-          domingo: []
+          lunes: [], martes: [], miercoles: [],
+          jueves: [], viernes: [], sabado: [], domingo: []
         }
       });
       await newProvider.save();
     } else {
-      // Es usuario normal
+      // Creamos usuario normal
       const newUser = new User({
         nombre: payload.nombre,
-        correo: payload.correo,
+        correo,
         clave: payload.clave
       });
       await newUser.save();
     }
 
-    res.json({ message: 'Cuenta confirmada y registrada correctamente.' });
+    return res.json({ message: 'Cuenta confirmada y registrada correctamente.' });
   } catch (error) {
     console.error(error);
-    res.status(400).json({ error: 'Token inválido o expirado.' });
+    return res.status(400).json({ error: 'Token inválido o expirado.' });
   }
 };
 
-// Login para usuario o proveedor
+// ------------------------------------------------------------------
+// 3) Login para usuario o proveedor
+// ------------------------------------------------------------------
 export const login = async (req, res) => {
   const { correo, clave } = req.body;
   try {
+    // Primero buscamos en Provider, si no, en User
     let user = await Provider.findOne({ correo });
     let userModel = 'Provider';
     if (!user) {
@@ -107,28 +139,31 @@ export const login = async (req, res) => {
       return res.status(400).json({ error: 'Correo o clave incorrectas.' });
     }
 
+    // Incluimos el tipo de cuenta en el token
     const token = jwt.sign(
-      { id: user._id, correo: user.correo, model: userModel },
+      { id: user._id, correo: user.correo, accountType: userModel },
       process.env.JWT_SECRET,
       { expiresIn: '12h' }
     );
 
-    res.json({
+    return res.json({
       message: 'Login exitoso',
       token,
       user: {
         _id: user._id,
         nombre: user.nombre,
         correo: user.correo,
-        userModel,
+        accountType: userModel,
         servicios: userModel === 'Provider' ? user.servicios : []
       }
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error en el servidor.' });
+    return res.status(500).json({ error: 'Error en el servidor.' });
   }
 };
+
+// ... las demás funciones (randomProfiles, searchProviders) no cambian
 
 // Obtener perfiles aleatorios de proveedores
 export const randomProfiles = async (req, res) => {

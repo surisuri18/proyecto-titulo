@@ -1,9 +1,9 @@
-// src/pages/All/Inbox.jsx
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { useLocation } from 'react-router-dom';
 import ChatRoom from '../../components/ChatRoom';
 import axios from 'axios';
+import { Container, Row, Col, Button, Card, ListGroup } from 'react-bootstrap';
 
 export default function Inbox() {
   const { user } = useContext(AuthContext);
@@ -26,7 +26,6 @@ export default function Inbox() {
       if (!user || !user._id || !user.userModel) return;
       try {
         const res = await axios.get(`/api/chat/ultimos/${user._id}/${user.userModel}`);
-        // res.data => [{ contactoId, contactoModel, ultimoMensaje, fecha, mensajeId }, ...]
         const resultados = await Promise.all(
           res.data.map(async (c) => {
             let nombre = c.contactoId;
@@ -67,47 +66,52 @@ export default function Inbox() {
   }
 
   return (
-    <div style={{ maxWidth: 500, margin: '0 auto', padding: 10 }}>
-      <h2>Mis Chats</h2>
-      <div style={{ border: '1px solid #ccc', padding: 10 }}>
-        {contacts.length === 0 && !selected && (
-          <p>No tienes conversaciones aún.</p>
-        )}
-        <ul style={{ listStyle: 'none', padding: 0 }}>
-          {contacts.map((c) => (
-            <li key={c.contactoId}>
-              <button
-                onClick={() =>
-                  setSelected({
-                    _id: c.contactoId,
-                    userModel: c.contactoModel,
-                    nombre: c.nombre
-                  })
-                }
-                style={{
-                  width: '100%',
-                  textAlign: 'left',
-                  padding: '8px 12px',
-                  border: 'none',
-                  background: '#f9f9f9',
-                  marginBottom: 5,
-                  cursor: 'pointer'
-                }}
-              >
-                {c.nombre} ({c.contactoModel})
-                <br />
-                <small style={{ fontSize: '0.8rem', color: '#666' }}>
-                  {c.ultimoMensaje} •{' '}
-                  {new Date(c.fecha).toLocaleDateString()}{' '}
-                  {new Date(c.fecha).toLocaleTimeString()}
-                </small>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
+    <Container className="my-5">
+      <Row>
+        <Col md={4} className="mb-4 sidebar">
+          <Card>
+            <Card.Header className="text-center">Mis Chats</Card.Header>
+            <ListGroup variant="flush">
+              {contacts.length === 0 && !selected && (
+                <ListGroup.Item className="text-center">No tienes conversaciones aún.</ListGroup.Item>
+              )}
+              {contacts.map((c) => (
+                <ListGroup.Item
+                  key={c.contactoId}
+                  className="d-flex justify-content-between align-items-center"
+                  action
+                  onClick={() =>
+                    setSelected({
+                      _id: c.contactoId,
+                      userModel: c.contactoModel,
+                      nombre: c.nombre
+                    })
+                  }
+                  style={{
+                    cursor: 'pointer',
+                    backgroundColor: '#f8f9fa',
+                    borderRadius: '8px',
+                    marginBottom: '10px',
+                  }}
+                >
+                  <div>
+                    <strong>{c.nombre}</strong> ({c.contactoModel})
+                    <br />
+                    <small className="text-muted">
+                      {c.ultimoMensaje} • {new Date(c.fecha).toLocaleDateString()}{' '}
+                      {new Date(c.fecha).toLocaleTimeString()}
+                    </small>
+                  </div>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          </Card>
+        </Col>
 
-      {selected && <ChatRoom miUsuario={user} otroUsuario={selected} />}
-    </div>
+        <Col md={8}>
+          {selected && <ChatRoom miUsuario={user} otroUsuario={selected} />}
+        </Col>
+      </Row>
+    </Container>
   );
 }

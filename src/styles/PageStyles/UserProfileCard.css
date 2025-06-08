@@ -1,27 +1,30 @@
 /* Perfil */
 .user-profile-card {
   width: 100%;
-  max-width: 1000px; /* Aumentamos el ancho máximo para que sea similar al perfil de Facebook */
+  max-width: 650px; /* Ancho máximo */
+  height: 550px; /* Altura del componente */
   border-radius: 15px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   border: none;
-  margin: 0 auto; /* Centrado automático */
+  margin: 0 auto;
+  padding-bottom: 30px; /* Más espacio al fondo */
 }
 
 /* Header del perfil */
 .profile-header {
-  background-color: #3b5998; /* Color similar al de Facebook */
+  background-color: #3b5998; /* Color de fondo */
   color: white;
-  padding: 30px; /* Espacio más amplio */
+  padding: 40px 20px; /* Espacio más amplio para que el nombre sea visible */
   text-align: center;
   font-weight: bold;
-  font-size: 32px; /* Tamaño de texto más grande */
+  font-size: 32px; /* Aumentamos el tamaño del texto */
+  word-wrap: break-word; /* Asegura que el nombre no se corte */
 }
 
 /* Imagen del perfil */
 .profile-img-container {
-  margin-top: -80px; /* Posición ajustada */
+  margin-top: -80px; /* Ajustamos la posición de la imagen */
   display: flex;
   justify-content: center;
 }
@@ -45,11 +48,18 @@
   font-size: 16px;
 }
 
+/* Nombre en negrita encima del correo */
+.profile-info .name {
+  font-weight: bold;
+  font-size: 18px; /* Ajuste de tamaño */
+  margin-bottom: 10px;
+}
+
 /* Enlaces de redes sociales */
 .profile-footer {
   display: flex;
   justify-content: center;
-  gap: 50px; /* Mayor espacio entre enlaces */
+  gap: 50px; /* Más espacio entre enlaces */
   padding: 20px;
   background-color: #f8f9fa;
 }

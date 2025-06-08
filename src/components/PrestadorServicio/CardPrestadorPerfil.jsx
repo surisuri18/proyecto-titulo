@@ -4,6 +4,7 @@ import '../../styles/Components/CardPrestadorPerfil.css';
 import imagenPerfil from '../../assets/imagenPerfil.jpeg';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 
+//targeta de preview de un prestador de servicios
 export default function CardPrestadorPerfil({
   imagenUrl,
   nombre,

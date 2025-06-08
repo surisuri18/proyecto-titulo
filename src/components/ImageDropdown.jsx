@@ -1,22 +1,20 @@
+// src/components/ImageDropdown.jsx
 import React, { useState, useRef, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Hombre1 from '../assets/IconosUsuario/Hombre1.png';
 import { AuthContext } from '../context/AuthContext';
 
-
 const ImageDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
-  const { logout } = useContext(AuthContext); // Usamos logout del contexto
-  const [hoveredIndex, setHoveredIndex] = useState(null); // <- para manejar el hover
+  const { user, logout } = useContext(AuthContext);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
 
-  const toggleDropdown = () => {
-    setIsOpen(prev => !prev);
-  };
+  const toggleDropdown = () => setIsOpen(o => !o);
 
-  const handleClickOutside = (event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+  const handleClickOutside = e => {
+    if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
       setIsOpen(false);
     }
   };
@@ -26,20 +24,32 @@ const ImageDropdown = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleNavigation = (path) => {
+  const handleNavigation = item => {
     setIsOpen(false);
-    if (path === '/login') {
-      logout(); // Llama al logout para cerrar sesión
-      navigate(path); // Redirige al login
-    } else {
-      navigate(path); // Redirige a otras páginas
+
+    if (item.type === 'logout') {
+      logout();
+      return navigate('/login');
     }
+
+    if (item.type === 'perfil') {
+      // Añadimos el id del usuario o del provider
+      const id = user._id;
+      const base =
+        user.userModel === 'Provider'
+          ? '/provider/perfil'
+          : '/user/perfil';
+      return navigate(`${base}/${id}`);
+    }
+
+    // mensajes u otras rutas
+    navigate(item.path);
   };
 
   const menuItems = [
-    { label: 'Perfil', path: '/user/profile' },
-    { label: 'Inbox', path: '/user/inbox' },
-    { label: 'Cerrar sesión', path: '/login' }
+    { label: 'Perfil', type: 'perfil' },
+    { label: 'Mensajes', type: 'navigate', path: '/bandeja' },
+    { label: 'Cerrar sesión', type: 'logout' }
   ];
 
   return (
@@ -49,41 +59,43 @@ const ImageDropdown = () => {
         alt="avatar"
         onClick={toggleDropdown}
         style={{
-          width: '50px',
-          height: '50px',
+          width: 50,
+          height: 50,
           borderRadius: '50%',
           cursor: 'pointer',
-          transition: 'transform 0.2s ease-in-out'
+          transition: 'transform 0.2s'
         }}
-        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+        onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.05)')}
+        onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
       />
+
       {isOpen && (
         <ul style={{
           position: 'absolute',
-          top: '70px',
+          top: 60,
           right: 0,
           background: '#fff',
           border: '1px solid #ccc',
-          borderRadius: '8px',
-          listStyle: 'none',
+          borderRadius: 8,
           padding: '0.5rem',
           boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-          zIndex: 9999,
-          minWidth: '180px'
+          listStyle: 'none',
+          margin: 0,
+          zIndex: 1000,
+          minWidth: 180
         }}>
-          {menuItems.map((item, index) => (
+          {menuItems.map((item, idx) => (
             <li
-              key={index}
-              onClick={() => handleNavigation(item.path)}
-              onMouseEnter={() => setHoveredIndex(index)}
+              key={idx}
+              onClick={() => handleNavigation(item)}
+              onMouseEnter={() => setHoveredIndex(idx)}
               onMouseLeave={() => setHoveredIndex(null)}
               style={{
                 padding: '10px 14px',
                 cursor: 'pointer',
-                fontSize: '15px',
-                backgroundColor: hoveredIndex === index ? '#bd4fca' : 'transparent', // rosado suave
-                borderRadius: '6px'
+                backgroundColor: hoveredIndex === idx ? '#bd4fca' : 'transparent',
+                borderRadius: 6,
+                fontSize: 15
               }}
             >
               {item.label}

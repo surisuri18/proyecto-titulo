@@ -1,4 +1,5 @@
 // src/pages/ProviderProfile.jsx
+
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../../context/AuthContext';
@@ -6,39 +7,29 @@ import ProfileCard from '../../components/ProfileCard';
 import { Container, Row, Col, Spinner, Button } from 'react-bootstrap';
 import '../../styles/PageStyles/ProviderProfile.css';
 
-export default function MiPerfilProvider() {
+export default function DetailProvider() {
+  // 1) Sacamos `user` (no `provider`) y el `token`
   const { user, token } = useContext(AuthContext);
+
   const [providerData, setProviderData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [imageFile, setImageFile] = useState(null);
 
   useEffect(() => {
-    console.log('🏷️ AuthContext.user =', user);
-    console.log('🔑 token =', token);
-
-    // Asegurarnos de que sea un proveedor
-    if (!user?._id || user.userModel !== 'Provider') {
-      console.warn('No hay provider logueado o userModel distinto de Provider');
+    // 2) Si no está logueado, salimos
+    if (!user?._id || user.accountType !== 'Provider') {
       setLoading(false);
       return;
     }
 
     setLoading(true);
-
-    const url = 'http://localhost:4000/api/providers/perfil';
-    console.log('📡 Llamando a:', url);
-
     axios
-      .get(url, {
+      // 3) Llamamos a /api/providers/perfil
+      .get('http://localhost:4000/api/providers/perfil', {
         headers: { Authorization: `Bearer ${token}` },
       })
-      .then(res => {
-        console.log('✅ /perfil response.data =', res.data);
-        setProviderData(res.data);
-      })
-      .catch(err => {
-        console.error('❌ Error al obtener mi perfil:', err.response?.data || err);
-      })
+      .then(res => setProviderData(res.data))
+      .catch(err => console.error('Error al obtener mi perfil:', err))
       .finally(() => setLoading(false));
   }, [user, token]);
 
@@ -50,10 +41,8 @@ export default function MiPerfilProvider() {
     formData.append('imagen', imageFile);
 
     try {
-      const url = 'http://localhost:4000/api/providers/upload-profile-image';
-      console.log('📤 Subiendo imagen a:', url);
       const res = await axios.post(
-        url,
+        'http://localhost:4000/api/providers/upload-profile-image',
         formData,
         {
           headers: {
@@ -62,13 +51,12 @@ export default function MiPerfilProvider() {
           },
         }
       );
-      console.log('✅ upload response =', res.data);
       setProviderData(prev => ({
         ...prev,
         imagenUrl: res.data.imagenUrl,
       }));
     } catch (error) {
-      console.error('❌ Error al guardar la imagen', error.response?.data || error);
+      console.error('Error al guardar la imagen', error);
     }
   };
 
@@ -100,7 +88,22 @@ export default function MiPerfilProvider() {
             descriptionField="descripcion"
             onImageChange={handleImageChange}
           >
-            {/* ... */}
+            <h6>Servicios</h6>
+            <ul>
+              {providerData.servicios.map(s => (
+                <li key={s}>{s}</li>
+              ))}
+            </ul>
+
+            <h6>Disponibilidad</h6>
+            <div className="availability-grid">
+              {Object.entries(providerData.disponibilidad).map(([dia, horas]) => (
+                <div key={dia}>
+                  <strong>{dia.charAt(0).toUpperCase() + dia.slice(1)}:</strong>{' '}
+                  {horas.length ? horas.join(', ') : '—'}
+                </div>
+              ))}
+            </div>
           </ProfileCard>
 
           <Button

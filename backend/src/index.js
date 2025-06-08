@@ -6,7 +6,7 @@ const cors = require('cors');
 const http = require('http');
 const { Server } = require('socket.io');
 const Message = require('./models/Message'); // <-- Nombre exacto y ruta correcta
-
+const path    = require('path');  
 const app = express();
 const server = http.createServer(app);
 
@@ -21,11 +21,16 @@ mongoose
 // Importar rutas
 const authRoutes = require('./routes/auth');
 const providerRoutes = require('./routes/providers');
+const UserRoutes = require('./routes/users');
 const chatRoutes = require('./routes/chat');
 
+
+// para que /uploads/archivo.png sirva la imagen
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/api/auth', authRoutes);
 app.use('/api/providers', providerRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/users', UserRoutes);  // Asegúrate de que esté /api/users para los usuarios
 
 app.get('/', (req, res) => res.send('Servidor backend corriendo'));
 
