@@ -12,37 +12,32 @@ export default function BandejaEntrada() {
   const [conversaciones, setConversaciones] = useState([]);
 
   useEffect(() => {
-    if (!user || !user._id || !user.userModel) return;
+    if (!user?._id || !user.accountType) return;
 
     const fetchConversaciones = async () => {
       try {
-        // Solicita a /api/chat/ultimos usando baseURL configurado arriba
-        const res = await axios.get(`/api/chat/ultimos/${user._id}/${user.userModel}`);
-        console.log('RES ULTIMOS MENSAJES:', res.data);
+        const res = await axios.get(
+          `/api/chat/ultimos/${user._id}/${user.accountType}`
+        );
 
-        // Cada elemento: { contactoId, contactoModel, ultimoMensaje, fecha, mensajeId }
         const resultados = await Promise.all(
           res.data.map(async (conv) => {
             const { contactoId, contactoModel, ultimoMensaje, fecha } = conv;
-            let urlPerfil = '';
-
-            if (contactoModel === 'User') {
-              urlPerfil = `/api/users/${contactoId}`;
-            } else if (contactoModel === 'Provider') {
-              urlPerfil = `/api/providers/${contactoId}`;
-            }
+            // Ajustamos la ruta de perfil
+            const urlPerfil =
+              contactoModel === 'User'
+                ? `/api/users/perfil/${contactoId}`
+                : `/api/providers/detalle/${contactoId}`;
 
             let nombre = 'Sin nombre';
             let imagen = imagenPerfil;
-
             try {
-              const datosUsuario = await axios.get(urlPerfil);
-              nombre = datosUsuario.data.nombre || 'Sin nombre';
-              imagen = datosUsuario.data.imagenUrl || imagenPerfil;
-            } catch (err) {
+              const datos = await axios.get(urlPerfil);
+              nombre = datos.data.nombre || nombre;
+              imagen = datos.data.imagenUrl || imagen;
+            } catch {
               console.warn(
-                `No se pudo obtener perfil de ${contactoModel} ${contactoId}`,
-                err
+                `No se pudo obtener perfil de ${contactoModel} ${contactoId}`
               );
             }
 
@@ -67,12 +62,11 @@ export default function BandejaEntrada() {
   }, [user]);
 
   const irAChat = (contacto) => {
-    // contacto = { contactoId, contactoModel, nombre, imagen, ultimoMensaje, fecha }
     navigate('/inbox', { state: { contacto } });
   };
 
   if (!user) {
-    return <div>Debes iniciar sesión para ver tu bandeja de entrada.</div>;
+    return <p>Debes iniciar sesión para ver tu bandeja de entrada.</p>;
   }
 
   return (
@@ -83,15 +77,11 @@ export default function BandejaEntrada() {
       )}
       {conversaciones.map((conv) => (
         <div
-          className="bandeja-item"
           key={conv.contactoId}
+          className="bandeja-item"
           onClick={() => irAChat(conv)}
         >
-          <img
-            src={conv.imagen}
-            alt="perfil"
-            className="bandeja-avatar"
-          />
+          <img src={conv.imagen} alt="perfil" className="bandeja-avatar" />
           <div className="bandeja-info">
             <div className="bandeja-nombre">{conv.nombre}</div>
             <div className="bandeja-mensaje">{conv.ultimoMensaje}</div>

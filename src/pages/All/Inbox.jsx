@@ -1,3 +1,5 @@
+// src/pages/All/BandejaEntrada.jsx
+
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import { useLocation } from 'react-router-dom';
@@ -12,57 +14,62 @@ export default function Inbox() {
   const [contacts, setContacts] = useState([]);
   const [selected, setSelected] = useState(null);
 
-  // 1) Si venimos de “Iniciar chat” con un proveedor
+  // 1) Si llegamos desde "Iniciar chat"
   useEffect(() => {
-    if (location.state && location.state.contacto) {
+    if (location.state?.contacto) {
       const { contactoId, contactoModel, nombre } = location.state.contacto;
-      setSelected({ _id: contactoId, userModel: contactoModel, nombre });
+      setSelected({ _id: contactoId, accountType: contactoModel, nombre });
     }
   }, [location.state]);
 
-  // 2) Cargar “últimos mensajes”
+  // 2) Cargar últimos chats
   useEffect(() => {
+    if (!user?._id || !user.accountType) return;
+
     const fetchContacts = async () => {
-      if (!user || !user._id || !user.userModel) return;
       try {
-        const res = await axios.get(`/api/chat/ultimos/${user._id}/${user.userModel}`);
+        const res = await axios.get(
+          `/api/chat/ultimos/${user._id}/${user.accountType}`
+        );
+
         const resultados = await Promise.all(
           res.data.map(async (c) => {
-            let nombre = c.contactoId;
-            if (c.contactoModel === 'Provider') {
-              try {
-                const respProv = await axios.get(`/api/providers/${c.contactoId}`);
-                nombre = respProv.data.nombre;
-              } catch {
-                nombre = c.contactoId;
-              }
-            } else if (c.contactoModel === 'User') {
-              try {
-                const respUser = await axios.get(`/api/users/${c.contactoId}`);
-                nombre = respUser.data.nombre;
-              } catch {
-                nombre = c.contactoId;
-              }
+            const { contactoId, contactoModel, ultimoMensaje, fecha } = c;
+            // Ajustamos la URL de detalle
+            const perfilUrl =
+              contactoModel === 'Provider'
+                ? `/api/providers/detalle/${contactoId}`
+                : `/api/users/perfil/${contactoId}`;
+
+            let nombre = 'Sin nombre';
+            try {
+              const perfil = await axios.get(perfilUrl);
+              nombre = perfil.data.nombre || nombre;
+            } catch {
+              console.warn(`No pude cargar perfil de ${contactoModel} ${contactoId}`);
             }
+
             return {
-              contactoId: c.contactoId,
-              contactoModel: c.contactoModel,
+              contactoId,
+              contactoModel,
               nombre,
-              ultimoMensaje: c.ultimoMensaje,
-              fecha: c.fecha
+              ultimoMensaje,
+              fecha,
             };
           })
         );
+
         setContacts(resultados);
       } catch (err) {
         console.error('Error cargando contactos:', err);
       }
     };
+
     fetchContacts();
   }, [user]);
 
   if (!user) {
-    return <div>Debes iniciar sesión para ver tus mensajes.</div>;
+    return <p>Debes iniciar sesión para ver tus mensajes.</p>;
   }
 
   return (
@@ -72,36 +79,35 @@ export default function Inbox() {
           <Card>
             <Card.Header className="text-center">Mis Chats</Card.Header>
             <ListGroup variant="flush">
-              {contacts.length === 0 && !selected && (
-                <ListGroup.Item className="text-center">No tienes conversaciones aún.</ListGroup.Item>
+              {!contacts.length && !selected && (
+                <ListGroup.Item className="text-center">
+                  No tienes conversaciones aún.
+                </ListGroup.Item>
               )}
               {contacts.map((c) => (
                 <ListGroup.Item
                   key={c.contactoId}
-                  className="d-flex justify-content-between align-items-center"
                   action
                   onClick={() =>
                     setSelected({
                       _id: c.contactoId,
-                      userModel: c.contactoModel,
-                      nombre: c.nombre
+                      accountType: c.contactoModel,
+                      nombre: c.nombre,
                     })
                   }
                   style={{
                     cursor: 'pointer',
                     backgroundColor: '#f8f9fa',
-                    borderRadius: '8px',
-                    marginBottom: '10px',
+                    borderRadius: 8,
+                    marginBottom: 10,
                   }}
                 >
-                  <div>
-                    <strong>{c.nombre}</strong> ({c.contactoModel})
-                    <br />
-                    <small className="text-muted">
-                      {c.ultimoMensaje} • {new Date(c.fecha).toLocaleDateString()}{' '}
-                      {new Date(c.fecha).toLocaleTimeString()}
-                    </small>
-                  </div>
+                  <strong>{c.nombre}</strong> ({c.contactoModel})
+                  <br />
+                  <small className="text-muted">
+                    {c.ultimoMensaje} • {new Date(c.fecha).toLocaleDateString()}{' '}
+                    {new Date(c.fecha).toLocaleTimeString()}
+                  </small>
                 </ListGroup.Item>
               ))}
             </ListGroup>
@@ -109,7 +115,14 @@ export default function Inbox() {
         </Col>
 
         <Col md={8}>
-          {selected && <ChatRoom miUsuario={user} otroUsuario={selected} />}
+          {selected ? (
+            <ChatRoom
+              miUsuario={user}
+              otroUsuario={selected}
+            />
+          ) : (
+            <p className="text-muted">Selecciona una conversación</p>
+          )}
         </Col>
       </Row>
     </Container>
