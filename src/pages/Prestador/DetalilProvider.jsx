@@ -1,64 +1,26 @@
-// src/pages/ProviderProfile.jsx
 
-import React, { useEffect, useState, useContext } from 'react';
+// src/pages/DetailProviderPage.jsx
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { AuthContext } from '../../context/AuthContext';
-import ProfileCard from '../../components/ProfileCard';
-import { Container, Row, Col, Spinner, Button } from 'react-bootstrap';
-import '../../styles/PageStyles/ProviderProfile.css';
+import ProfileCard from '../../components/PrestadorServicio/CardPrestadorPerfil';
+import DescriptionBox from '../../components/PrestadorServicio/DescripcionPerfil';
+import FotosTrabajo from '../../components/PrestadorServicio/FotosTrabajo';
+import Valoracion from '../../components/PrestadorServicio/Valoracion';
+import { Container, Spinner } from 'react-bootstrap';
 
-export default function DetailProvider() {
-  // 1) Sacamos `user` (no `provider`) y el `token`
-  const { user, token } = useContext(AuthContext);
-
-  const [providerData, setProviderData] = useState(null);
+export default function DetailProviderPage() {
+  const { id } = useParams();
+  const [provider, setProvider] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [imageFile, setImageFile] = useState(null);
 
   useEffect(() => {
-    // 2) Si no está logueado, salimos
-    if (!user?._id || user.accountType !== 'Provider') {
-      setLoading(false);
-      return;
-    }
-
-    setLoading(true);
     axios
-      // 3) Llamamos a /api/providers/perfil
-      .get('http://localhost:4000/api/providers/perfil', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then(res => setProviderData(res.data))
-      .catch(err => console.error('Error al obtener mi perfil:', err))
+      .get(`http://localhost:4000/api/providers/detalle/${id}`)
+      .then(({ data }) => setProvider(data))
+      .catch(console.error)
       .finally(() => setLoading(false));
-  }, [user, token]);
-
-  const handleImageChange = file => setImageFile(file);
-
-  const handleSaveChanges = async () => {
-    if (!imageFile) return;
-    const formData = new FormData();
-    formData.append('imagen', imageFile);
-
-    try {
-      const res = await axios.post(
-        'http://localhost:4000/api/providers/upload-profile-image',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setProviderData(prev => ({
-        ...prev,
-        imagenUrl: res.data.imagenUrl,
-      }));
-    } catch (error) {
-      console.error('Error al guardar la imagen', error);
-    }
-  };
+  }, [id]);
 
   if (loading) {
     return (
@@ -68,53 +30,39 @@ export default function DetailProvider() {
     );
   }
 
-  if (!providerData) {
+  if (!provider) {
     return (
       <Container className="text-center my-5">
-        <p>No se encontró al proveedor.</p>
+        <p>Proveedor no encontrado.</p>
       </Container>
     );
   }
 
   return (
     <Container className="my-5">
-      <Row className="justify-content-center">
-        <Col md={8} lg={6}>
-          <ProfileCard
-            data={providerData}
-            nameField="nombre"
-            emailField="correo"
-            imageField="imagenUrl"
-            descriptionField="descripcion"
-            onImageChange={handleImageChange}
-          >
-            <h6>Servicios</h6>
-            <ul>
-              {providerData.servicios.map(s => (
-                <li key={s}>{s}</li>
-              ))}
-            </ul>
+      {/* 1. Cabecera con avatar y datos básicos */}
+      <ProfileCard
+        data={provider}
+        nameField="nombre"
+        emailField="correo"
+        imageField="imagenUrl"
+      />
 
-            <h6>Disponibilidad</h6>
-            <div className="availability-grid">
-              {Object.entries(providerData.disponibilidad).map(([dia, horas]) => (
-                <div key={dia}>
-                  <strong>{dia.charAt(0).toUpperCase() + dia.slice(1)}:</strong>{' '}
-                  {horas.length ? horas.join(', ') : '—'}
-                </div>
-              ))}
-            </div>
-          </ProfileCard>
+      {/* 2. Valoración */}
+      <h5 className="mt-4">Calificación</h5>
+      <Valoracion rating={provider.calificacion} readOnly />
 
-          <Button
-            className="button-save-changes mt-3"
-            onClick={handleSaveChanges}
-            disabled={!imageFile}
-          >
-            Guardar Cambios
-          </Button>
-        </Col>
-      </Row>
+      {/* 3. Descripción */}
+      <h5 className="mt-4">Descripción</h5>
+      <DescriptionBox
+        description={provider.descripcion}
+        placeholder="El proveedor no ha añadido descripción."
+        rows={6}
+      />
+
+      {/* 4. Galería */}
+      <h5 className="mt-4">Fotos de trabajos</h5>
+      <FotosTrabajo initialPhotos={provider.galeria} />
     </Container>
   );
 }

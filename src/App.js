@@ -19,7 +19,7 @@ import UserEditProfile from './pages/Cliente/UserEditProfile';
 
 import RegisterProvider from './pages/Prestador/RegisterProvider';
 import ProviderProfile from './pages/Prestador/ProviderProfile';
-import ProviderEditProfile from './pages/Prestador/ProviderEditProfile';
+import DetailProvider from './pages/Prestador/DetalilProvider';
 
 import MenuAdmin from './pages/Admin/MenuAdmin';
 import GestionUsuarios from './pages/Admin/GestionUsuarios';
@@ -66,7 +66,7 @@ function App() {
             {/* Rutas proveedor */}
             <Route path="/registerprovider" element={<RegisterProvider />} />
             <Route path="/provider/perfil" element={<ProviderProfile />} />
-            <Route path="/provider/detalle" element={<detalle />} />
+            <Route path="/provider/detalle/:id" element={<DetailProvider />} />
 
             {/* Rutas admin */}
             <Route path="/admin" element={<MenuAdmin />} />

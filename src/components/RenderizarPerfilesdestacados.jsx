@@ -36,7 +36,7 @@ const PerfilesDestacados = () => {
   }
 
   const handleVerPerfil = (profile) => {
-    navigate(`/provider/${profile._id}`);
+    navigate(`/provider/detalle/${profile._id}`);
   };
 
   const handleIniciarChatDirecto = (profile) => {
