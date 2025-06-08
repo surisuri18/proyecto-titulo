@@ -143,6 +143,32 @@ router.post('/upload-profile-image/:id', upload.single('imagen'), async (req, re
     res.status(500).json({ error: 'Error al subir imagen' });
   }
 });
+// ------------------------------------------------------------------
+// 6) PUT /api/providers/disponibilidad
+//    Actualiza la disponibilidad horaria del proveedor autenticado
+// ------------------------------------------------------------------
+router.put(
+  '/disponibilidad',
+  authenticate,
+  async (req, res) => {
+    try {
+      const { disponibilidad } = req.body;
+      const updated = await Provider.findByIdAndUpdate(
+        req.user.id,
+        { disponibilidad },
+        { new: true, select: '-clave' }
+      );
+      if (!updated) {
+        return res.status(404).json({ error: 'Proveedor no encontrado' });
+      }
+      res.json(updated);
+    } catch (error) {
+      console.error('Error al actualizar disponibilidad:', error);
+      res.status(500).json({ error: 'Error al actualizar la disponibilidad' });
+    }
+  }
+);
+
 
 
 module.exports = router;

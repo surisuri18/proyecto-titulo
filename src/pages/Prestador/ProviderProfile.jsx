@@ -3,6 +3,8 @@ import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../../context/AuthContext';
 import ProfileCard from '../../components/ProfileCard';
+import HorarioEditable from '../../components/HorarioEditable';
+import { updateAvailability } from '../../services/providerService';
 import { Container, Row, Col, Spinner, Button } from 'react-bootstrap';
 import '../../styles/PageStyles/ProviderProfile.css';
 
@@ -11,6 +13,10 @@ export default function MiPerfilProvider() {
   const [providerData, setProviderData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [imageFile, setImageFile] = useState(null);
+    const [availability, setAvailability] = useState({
+    lunes: [], martes: [], miercoles: [],
+    jueves: [], viernes: [], sabado: [], domingo: []
+  });
 
   useEffect(() => {
     console.log('🏷️ AuthContext.user =', user);
@@ -35,6 +41,9 @@ export default function MiPerfilProvider() {
       .then(res => {
         console.log('✅ /perfil response.data =', res.data);
         setProviderData(res.data);
+         if (res.data.disponibilidad) {
+          setAvailability(res.data.disponibilidad);
+        }
       })
       .catch(err => {
         console.error('❌ Error al obtener mi perfil:', err.response?.data || err);
@@ -72,6 +81,15 @@ export default function MiPerfilProvider() {
     }
   };
 
+    const handleSaveAvailability = async () => {
+    try {
+      const updated = await updateAvailability(token, availability);
+      setProviderData(updated);
+    } catch (error) {
+      console.error('❌ Error al guardar disponibilidad', error.response?.data || error);
+    }
+  };
+
   if (loading) {
     return (
       <Container className="text-center my-5">
@@ -98,19 +116,29 @@ export default function MiPerfilProvider() {
             emailField="correo"
             imageField="imagenUrl"
             descriptionField="descripcion"
-            onImageChange={handleImageChange}
-          >
-            {/* ... */}
-          </ProfileCard>
+          onImageChange={handleImageChange}
+        >
+          <HorarioEditable
+            disponibilidad={availability}
+            onChange={setAvailability}
+          />
+        </ProfileCard>
 
           <Button
             className="button-save-changes mt-3"
-            onClick={handleSaveChanges}
-            disabled={!imageFile}
-          >
-            Guardar Cambios
-          </Button>
-        </Col>
+             onClick={handleSaveChanges}
+          disabled={!imageFile}
+        >
+          Guardar Cambios
+        </Button>
+        <Button
+          className="button-save-changes mt-3 ms-2"
+          onClick={handleSaveAvailability}
+        >
+          Guardar Disponibilidad
+        </Button>
+      </Col>
+            
       </Row>
     </Container>
   );

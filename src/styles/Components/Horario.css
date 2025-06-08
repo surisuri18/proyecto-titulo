@@ -31,3 +31,7 @@
   color: white;
   font-weight: bold;
 }
+
+.horario-celda.editable {
+  cursor: pointer;
+}
