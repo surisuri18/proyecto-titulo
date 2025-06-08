@@ -34,12 +34,12 @@ const ImageDropdown = () => {
 
     if (item.type === 'perfil') {
       // Añadimos el id del usuario o del provider
-      const id = user._id;
-      const base =
-        user.userModel === 'Provider'
-          ? '/provider/perfil'
-          : '/user/perfil';
-      return navigate(`${base}/${id}`);
+         // Si es Provider, ruta sin :id; si es User, ruta con su _id
+      if (user.accountType === 'Provider') {
+        return navigate('/provider/perfil');
+      } else {
+        return navigate(`/user/perfil/${user._id}`);
+      }
     }
 
     // mensajes u otras rutas

@@ -65,7 +65,7 @@ function App() {
 
             {/* Rutas proveedor */}
             <Route path="/registerprovider" element={<RegisterProvider />} />
-            <Route path="/provider/perfil/:id" element={<ProviderProfile />} />
+            <Route path="/provider/perfil" element={<ProviderProfile />} />
             <Route path="/provider/detalle" element={<detalle />} />
 
             {/* Rutas admin */}

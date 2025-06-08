@@ -17,7 +17,7 @@ export default function MiPerfilProvider() {
     console.log('🔑 token =', token);
 
     // Asegurarnos de que sea un proveedor
-    if (!user?._id || user.userModel !== 'Provider') {
+    if (!user?._id || user.accountType !== 'Provider') {
       console.warn('No hay provider logueado o userModel distinto de Provider');
       setLoading(false);
       return;
