@@ -11,12 +11,13 @@ const router = express.Router();
 // ------------------------------------------------------------------
 // Configuración de subida de archivos (imágenes de perfil)
 // ------------------------------------------------------------------
+// Carpeta uploads compartida con usuarios
 const uploadDir = path.join(__dirname, '../uploads');
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
 
 const storage = multer.diskStorage({
   destination: (_, __, cb) => cb(null, uploadDir),
-  filename:  (_, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
+  filename: (_, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
 });
 const upload = multer({ storage });
 
@@ -103,71 +104,58 @@ router.get(
 // 4) PUT /api/providers/detalle/:id
 //    Actualiza la descripción de un proveedor
 // ------------------------------------------------------------------
-router.put(
-  '/:id',
-  authenticate, // descomenta si quieres proteger esta ruta
-  async (req, res) => {
-    try {
-      const { descripcion } = req.body;
-      const updated = await Provider.findByIdAndUpdate(
-        req.params.id,
-        { descripcion },
-        { new: true, select: '-clave' }
-      );
-      if (!updated) {
-        return res.status(404).json({ error: 'Proveedor no encontrado' });
-      }
-      res.json(updated);
-    } catch (error) {
-      console.error('Error al actualizar descripción:', error);
-      res.status(500).json({ error: 'Error al actualizar la descripción' });
-    }
+// Actualizar descripción del proveedor autenticado
+router.put('/descripcion', authenticate, async (req, res) => {
+  try {
+    const { descripcion } = req.body;
+    const updated = await Provider.findByIdAndUpdate(
+      req.user.id,
+      { descripcion },
+      { new: true, select: '-clave' }
+    );
+    if (!updated) return res.status(404).json({ error: 'Proveedor no encontrado' });
+    res.json(updated);
+  } catch (err) {
+    console.error('Error al actualizar descripción:', err);
+    res.status(500).json({ error: 'Error al actualizar descripción' });
   }
-);
+});
 //----------------------------------------------------------
 // 5) POST /api/providers/upload-profile-image/:id
 //    Sube la imagen de perfil de un proveedor
 // ------------------------------------------------------------------
-router.post('/upload-profile-image/:id', upload.single('imagen'), async (req, res) => {
+// Subir imagen de perfil del proveedor autenticado
+router.post('/upload-profile-image', authenticate, upload.single('imagen'), async (req, res) => {
   try {
-    const proveedor = await Provider.findById(req.params.id);
-    if (!proveedor) {
-      return res.status(404).json({ error: 'Proveedor no encontrado' });
-    }
-
-    proveedor.imagenUrl = `/uploads/${req.file.filename}`;
-    await proveedor.save();
-    res.json({ message: 'Imagen actualizada', imagenUrl: proveedor.imagenUrl });
-  } catch (error) {
-    console.error('Error al subir imagen:', error);
+    const provider = await Provider.findById(req.user.id);
+    if (!provider) return res.status(404).json({ error: 'Proveedor no encontrado' });
+    provider.imagenUrl = `/uploads/${req.file.filename}`;
+    await provider.save();
+    res.json({ imagenUrl: provider.imagenUrl });
+  } catch (err) {
+    console.error('Error al subir imagen:', err);
     res.status(500).json({ error: 'Error al subir imagen' });
   }
 });
 // 5) PUT /api/providers/disponibilidad
 //    Actualiza la disponibilidad horaria del proveedor autenticado
 // ------------------------------------------------------------------
-router.put(
-  '/disponibilidad',
-  authenticate,
-  async (req, res) => {
-    try {
-      const { disponibilidad } = req.body;
-      const updated = await Provider.findByIdAndUpdate(
-        req.user.id,
-        { disponibilidad },
-        { new: true, select: '-clave' }
-      );
-      if (!updated) {
-        return res.status(404).json({ error: 'Proveedor no encontrado' });
-      }
-      res.json(updated);
-    } catch (error) {
-      console.error('Error al actualizar disponibilidad:', error);
-      res.status(500).json({ error: 'Error al actualizar la disponibilidad' });
-    }
+// Actualizar disponibilidad del proveedor autenticado
+router.put('/availability', authenticate, async (req, res) => {
+  try {
+    const { disponibilidad } = req.body; // objeto con dias -> array de horas
+    const updated = await Provider.findByIdAndUpdate(
+      req.user.id,
+      { disponibilidad },
+      { new: true, select: '-clave' }
+    );
+    if (!updated) return res.status(404).json({ error: 'Proveedor no encontrado' });
+    res.json(updated);
+  } catch (err) {
+    console.error('Error al actualizar disponibilidad:', err);
+    res.status(500).json({ error: 'Error al actualizar disponibilidad' });
   }
-);
-
+});
 
 
 module.exports = router;

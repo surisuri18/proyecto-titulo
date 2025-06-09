@@ -4,6 +4,7 @@ const multer  = require('multer');
 const path    = require('path');
 const fs      = require('fs');
 const User    = require('../models/user');
+const jwt     = require('jsonwebtoken');
 
 const router = express.Router();
 
@@ -17,6 +18,21 @@ const storage = multer.diskStorage({
   filename:  (_, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
 });
 const upload = multer({ storage });
+
+function authenticate(req, res, next) {
+  const header = req.headers.authorization;
+  if (!header?.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'No autorizado: falta token' });
+  }
+  const token = header.split(' ')[1];
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = { id: payload.id, accountType: payload.accountType };
+    next();
+  } catch {
+    return res.status(401).json({ error: 'Token inválido o expirado' });
+  }
+}
 
 // 3) GET /api/users/perfil/:id
 //    Para asemejarlo a tu ruta de provider
@@ -44,6 +60,25 @@ router.post('/upload-profile-image/:id', upload.single('imagen'), async (req, re
   } catch (err) {
     console.error('Error al subir imagen:', err);
     return res.status(500).json({ error: 'Error al subir imagen' });
+  }
+});
+
+router.put('/descripcion/:id', authenticate, async (req, res) => {
+  try {
+    if (req.user.id !== req.params.id) {
+      return res.status(403).json({ error: 'No autorizado' });
+    }
+    const { descripcion } = req.body;
+    const updated = await User.findByIdAndUpdate(
+      req.params.id,
+      { descripcion },
+      { new: true, select: '-clave' }
+    );
+    if (!updated) return res.status(404).json({ error: 'Usuario no encontrado' });
+    res.json(updated);
+  } catch (err) {
+    console.error('Error al actualizar descripción:', err);
+    res.status(500).json({ error: 'Error al actualizar descripción' });
   }
 });
 

@@ -12,6 +12,20 @@ export default function UserProfile() {
   const [loading, setLoading] = useState(true);
   const [imageFile, setImageFile] = useState(null);
 
+    const handleSaveDescription = async (desc) => {
+    try {
+      const url = `http://localhost:4000/api/users/descripcion/${user._id}`;
+      const res = await axios.put(
+        url,
+        { descripcion: desc },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setProfileData(res.data);
+    } catch (error) {
+      console.error('Error al actualizar descripción:', error.response?.data || error);
+    }
+  };
+
   useEffect(() => {
     if (!user?._id) {
       setLoading(false);
@@ -81,6 +95,7 @@ export default function UserProfile() {
             imageField="imagenUrl"
             descriptionField="descripcion"
             onImageChange={handleImageChange}
+            onSaveDescription={handleSaveDescription}
           />
           <Button
             className="button-save-changes mt-3"

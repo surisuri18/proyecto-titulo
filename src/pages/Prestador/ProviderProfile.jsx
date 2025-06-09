@@ -14,10 +14,21 @@ export default function MiPerfilProvider() {
   const [providerData, setProviderData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [imageFile, setImageFile] = useState(null);
-    const [availability, setAvailability] = useState({
-    lunes: [], martes: [], miercoles: [],
-    jueves: [], viernes: [], sabado: [], domingo: []
-  });
+
+   const handleSaveDescription = async (desc) => {
+    try {
+      const url = 'http://localhost:4000/api/providers/descripcion';
+      const res = await axios.put(
+        url,
+        { descripcion: desc },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setProviderData(res.data);
+    } catch (error) {
+      console.error('Error al actualizar descripción', error.response?.data || error);
+    }
+  };
+  
 
   useEffect(() => {
     console.log('🏷️ AuthContext.user =', user);
@@ -42,9 +53,6 @@ export default function MiPerfilProvider() {
       .then(res => {
         console.log('✅ /perfil response.data =', res.data);
         setProviderData(res.data);
-         if (res.data.disponibilidad) {
-          setAvailability(res.data.disponibilidad);
-        }
       })
       .catch(err => {
         console.error('❌ Error al obtener mi perfil:', err.response?.data || err);
@@ -82,14 +90,7 @@ export default function MiPerfilProvider() {
     }
   };
 
-    const handleSaveAvailability = async () => {
-    try {
-      const updated = await updateAvailability(token, availability);
-      setProviderData(updated);
-    } catch (error) {
-      console.error('❌ Error al guardar disponibilidad', error.response?.data || error);
-    }
-  };
+
 
   if (loading) {
     return (
@@ -118,11 +119,9 @@ export default function MiPerfilProvider() {
             imageField="imagenUrl"
             descriptionField="descripcion"
           onImageChange={handleImageChange}
+          onSaveDescription={handleSaveDescription}
         >
-          <HorarioEditable
-            disponibilidad={availability}
-            onChange={setAvailability}
-          />
+  
         </ProfileCard>
 
         <Button
