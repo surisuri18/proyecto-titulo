@@ -6,6 +6,7 @@ import ProfileCard from '../../components/ProfileCard';
 import HorarioEditable from '../../components/HorarioEditable';
 import { updateAvailability } from '../../services/providerService';
 import { Container, Row, Col, Spinner, Button } from 'react-bootstrap';
+import BookingCalendar from '../../components/PrestadorServicio/BookingCalendar'
 import '../../styles/PageStyles/ProviderProfile.css';
 
 export default function MiPerfilProvider() {
@@ -124,22 +125,18 @@ export default function MiPerfilProvider() {
           />
         </ProfileCard>
 
-          <Button
-            className="button-save-changes mt-3"
-             onClick={handleSaveChanges}
+        <Button
+          className="button-save-changes mt-3"
+          onClick={handleSaveChanges}
           disabled={!imageFile}
         >
           Guardar Cambios
         </Button>
-        <Button
-          className="button-save-changes mt-3 ms-2"
-          onClick={handleSaveAvailability}
-        >
-          Guardar Disponibilidad
-        </Button>
+        <div className="mt-4">
+          <BookingCalendar />
+        </div>
       </Col>
-            
-      </Row>
-    </Container>
+    </Row>
+  </Container>
   );
 }

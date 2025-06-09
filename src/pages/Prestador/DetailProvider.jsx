@@ -7,6 +7,7 @@ import Valoracion from '../../components/PrestadorServicio/Valoracion';
 import Horario from '../../components/Horario';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import { AuthContext } from '../../context/AuthContext';
+import BookingCalendar from '../../components/PrestadorServicio/BookingCalendar'
 
 
 export default function DetailProvider() {
@@ -99,8 +100,9 @@ export default function DetailProvider() {
       </div>
 
       <div className="mt-5">
-        <h5>Horario de atención</h5>
-        <Horario disponibilidad={provider.disponibilidad} />
+        
+      <h5 className="mt-4">Agenda tu reserva</h5>
+      <BookingCalendar />
       </div>
     </div>
   );

@@ -143,8 +143,7 @@ router.post('/upload-profile-image/:id', upload.single('imagen'), async (req, re
     res.status(500).json({ error: 'Error al subir imagen' });
   }
 });
-// ------------------------------------------------------------------
-// 6) PUT /api/providers/disponibilidad
+// 5) PUT /api/providers/disponibilidad
 //    Actualiza la disponibilidad horaria del proveedor autenticado
 // ------------------------------------------------------------------
 router.put(
