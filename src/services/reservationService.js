@@ -14,3 +14,10 @@ export const updateReservationStatus = async (id, status, token) => {
   });
   return res.data;
 };
+
+export const getProviderReservations = async (providerId, token) => {
+  const url = `http://localhost:4000/api/providers/${providerId}/reservations`;
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  const res = await axios.get(url, { headers });
+  return res.data;
+};
